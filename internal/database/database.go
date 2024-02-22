@@ -15,6 +15,7 @@ import (
 type Service interface {
 	Health() map[string]string
 	GetProducts() ([]Product, error)
+	AddProduct(product Product) (int64, error)
 }
 
 type service struct {
@@ -70,3 +71,16 @@ func (s *service) GetProducts() ([]Product, error) {
 	}
 	return products, nil
 }
+
+func (s *service) AddProduct(product Product) (int64, error) {
+	if product.Name == "" || product.Price == 0 {
+		return 0, fmt.Errorf("empty name or price for product")
+	}
+	res, err := s.db.Exec(`insert into products (name, price, description) value (?, ?, ?)`,
+		product.Name, product.Price, product.Description)
+	if err != nil {
+		return 0, err
+	}
+	return res.LastInsertId()
+}
+
