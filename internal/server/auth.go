@@ -1,6 +1,7 @@
 package server
 
 import (
+	"clothe-shop-v2/internal/database"
 	"fmt"
 	"log"
 	"net/http"
@@ -55,6 +56,31 @@ func (s *Server) UserLogin(c *gin.Context) {
 	tokenString, err := createToken(user.ID, s.secret)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "failed to authenitcate user")
+		return
+	}
+	c.SetCookie("auth-token", tokenString, 86400, "/", "localhost", false, true)
+}
+
+func (s *Server) UserSignup(c *gin.Context) {
+	var user database.User
+	user.Name = c.PostForm("name")
+	user.Email = c.PostForm("email")
+	// use bcrypt
+	user.Password = c.PostForm("password")
+	if user.Name == "" || user.Email == "" || user.Password == "" {
+		c.String(http.StatusBadRequest, "missing fields")
+		return
+	}
+	userID, err := s.db.AddNewUser(user)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusConflict, "email already used")
+		return
+	}
+	tokenString, err := createToken(userID, s.secret)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to authenticate user, try loggin")
 		return
 	}
 	c.SetCookie("auth-token", tokenString, 86400, "/", "localhost", false, true)
