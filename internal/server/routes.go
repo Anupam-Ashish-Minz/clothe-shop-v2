@@ -10,6 +10,7 @@ import (
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
+	r.StaticFile("/static/output.css", "./templates/output.css")
 	r.GET("/", s.HelloWorldHandler)
 	r.GET("/health", s.healthHandler)
 
@@ -17,7 +18,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HelloWorldHandler(c *gin.Context) {
-	templates.Index("hello world").Render(context.Background(), c.Writer)
+	templates.Index().Render(context.Background(), c.Writer)
 }
 
 func (s *Server) healthHandler(c *gin.Context) {
