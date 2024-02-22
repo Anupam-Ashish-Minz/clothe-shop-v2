@@ -20,6 +20,13 @@ type service struct {
 	db *sql.DB
 }
 
+type Product struct {
+	ID          int64
+	Name        string
+	Description string
+	Price       int
+}
+
 var (
 	dburl = os.Getenv("DB_URL")
 )

@@ -1,5 +1,9 @@
 package templates 
 
+import (
+	"clothe-shop-v2/internal/database"
+)
+
 templ Base() {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -16,8 +20,13 @@ templ Base() {
 	</html>
 }
 
-templ Index() {
+templ Index(products []database.Product) {
 	@Base() {
-		<h1 class="bg-red-300 text-xl font-bold uppercase">a red heading</h1>
+		<h1 class="">heading one</h1>
+		<ul>
+			for _, product := range products {
+				<li>{ product.Name }</li>
+			}
+		</ul>
 	}
 }

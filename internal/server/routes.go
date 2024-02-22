@@ -1,6 +1,7 @@
 package server
 
 import (
+	"clothe-shop-v2/internal/database"
 	"clothe-shop-v2/templates"
 	"context"
 	"net/http"
@@ -18,7 +19,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HelloWorldHandler(c *gin.Context) {
-	templates.Index().Render(context.Background(), c.Writer)
+	var products []database.Product
+	templates.Index(products).Render(context.Background(), c.Writer)
 }
 
 func (s *Server) healthHandler(c *gin.Context) {
