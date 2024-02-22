@@ -1,8 +1,11 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
+	"clothe-shop-v2/templates"
+	"context"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -14,10 +17,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HelloWorldHandler(c *gin.Context) {
-	resp := make(map[string]string)
-	resp["message"] = "Hello World"
-
-	c.JSON(http.StatusOK, resp)
+	templates.Index("hello world").Render(context.Background(), c.Writer)
 }
 
 func (s *Server) healthHandler(c *gin.Context) {
