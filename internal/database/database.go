@@ -16,6 +16,7 @@ type Service interface {
 	Health() map[string]string
 	GetProducts() ([]Product, error)
 	AddProduct(product Product) (int64, error)
+	UpdateProduct(product Product) error
 }
 
 type service struct {
@@ -84,3 +85,34 @@ func (s *service) AddProduct(product Product) (int64, error) {
 	return res.LastInsertId()
 }
 
+func (s *service) getProductById(productID int64) (Product, error) {
+	var product Product
+	row := s.db.QueryRow(`select id, name, price, description where id = ?`, productID)
+	row.Scan(&product.ID, &product.Name, &product.Price, &product.Description)
+	if product.ID == 0 {
+		return product, fmt.Errorf("no such product exists")
+	}
+	return product, nil
+}
+
+func (s *service) UpdateProduct(product Product) error {
+	if product.ID == 0 {
+		return fmt.Errorf("failed to find product by id")
+	}
+	orignalProduct, err := s.getProductById(product.ID)
+	if err != nil {
+		return err
+	}
+	if product.Name == "" {
+		product.Name = orignalProduct.Name
+	}
+	if product.Description == "" {
+		product.Description = orignalProduct.Description
+	}
+	if product.Price == 0 {
+		product.Price = orignalProduct.Price
+	}
+	s.db.Exec(`update Product set name = ?, description = ?, price = ? where id = ?`,
+		product.Name, product.Description, product.Price, product.ID)
+	return fmt.Errorf("not implemented")
+}
