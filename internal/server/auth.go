@@ -9,12 +9,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func createToken(userID int64, SECRET string) (string, error) {
+func createToken(userID int64, SECRET []byte) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"user_id": userID})
 	return token.SignedString(SECRET)
 }
 
-func parseToken(tokenString string, SECRET string) (int64, error) {
+func parseToken(tokenString string, SECRET []byte) (int64, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("invalid signing method")

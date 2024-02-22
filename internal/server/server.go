@@ -15,12 +15,12 @@ import (
 type Server struct {
 	port   int
 	db     database.Service
-	secret string
+	secret []byte
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
-	secret := os.Getenv("SECRET")
+	secret := []byte(os.Getenv("SECRET"))
 	NewServer := &Server{
 		port:   port,
 		db:     database.New(),
