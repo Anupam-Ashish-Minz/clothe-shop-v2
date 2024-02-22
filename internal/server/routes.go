@@ -1,9 +1,9 @@
 package server
 
 import (
-	"clothe-shop-v2/internal/database"
 	"clothe-shop-v2/templates"
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +19,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HomePage(c *gin.Context) {
-	var products []database.Product
+	products, err := s.db.GetProducts()
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products")
+		return
+	}
 	templates.Index(products).Render(context.Background(), c.Writer)
 }
 

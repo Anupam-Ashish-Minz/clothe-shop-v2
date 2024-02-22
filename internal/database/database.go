@@ -14,6 +14,7 @@ import (
 
 type Service interface {
 	Health() map[string]string
+	GetProducts() ([]Product, error)
 }
 
 type service struct {
@@ -54,4 +55,18 @@ func (s *service) Health() map[string]string {
 	return map[string]string{
 		"message": "It's healthy",
 	}
+}
+
+func (s *service) GetProducts() ([]Product, error) {
+	products := make([]Product, 0)
+	var p Product
+	rows, err := s.db.Query(`select id, name, description, price from Product`)
+	if err != nil {
+		return products, err
+	}
+	for rows.Next() {
+		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price)
+		products = append(products, p)
+	}
+	return products, nil
 }
