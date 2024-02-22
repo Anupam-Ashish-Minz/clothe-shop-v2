@@ -12,13 +12,13 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 	r.StaticFile("/static/output.css", "./templates/output.css")
-	r.GET("/", s.HelloWorldHandler)
+	r.GET("/", s.HomePage)
 	r.GET("/health", s.healthHandler)
 
 	return r
 }
 
-func (s *Server) HelloWorldHandler(c *gin.Context) {
+func (s *Server) HomePage(c *gin.Context) {
 	var products []database.Product
 	templates.Index(products).Render(context.Background(), c.Writer)
 }
