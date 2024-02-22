@@ -8,19 +8,23 @@ import (
 	"time"
 
 	"clothe-shop-v2/internal/database"
+
 	_ "github.com/joho/godotenv/autoload"
 )
 
 type Server struct {
-	port int
-	db   database.Service
+	port   int
+	db     database.Service
+	secret string
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	secret := os.Getenv("SECRET")
 	NewServer := &Server{
-		port: port,
-		db:   database.New(),
+		port:   port,
+		db:     database.New(),
+		secret: secret,
 	}
 
 	// Declare Server config
