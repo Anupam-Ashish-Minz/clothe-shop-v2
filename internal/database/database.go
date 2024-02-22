@@ -17,6 +17,8 @@ type Service interface {
 	GetProducts() ([]Product, error)
 	AddProduct(product Product) (int64, error)
 	UpdateProduct(product Product) error
+	GetUserByEmail(email string) (User, error)
+	AddNewUser(user User) (int64, error)
 }
 
 type service struct {
