@@ -1,0 +1,39 @@
+package templates 
+
+templ Login() {
+	@Base() {
+		<form action="/login" method="POST" class="flex flex-col gap-2 items-start">
+			<label for="email" class="flex flex-col gap-1">
+				Email
+				<input type="email" name="email"/>
+			</label>
+			<label for="password" class="flex flex-col gap-1">
+				Password
+				<input type="password" name="password"/>
+			</label>
+			<a href="/signup">Don't have a password signup</a>
+			<button>login</button>
+		</form>
+	}
+}
+
+templ Signup() {
+	@Base() {
+		<form action="/signup" method="POST" class="flex flex-col gap-2 items-start">
+			<label for="name" class="flex flex-col gap-1">
+				Name
+				<input type="name" name="name"/>
+			</label>
+			<label for="email" class="flex flex-col gap-1">
+				Email
+				<input type="email" name="email"/>
+			</label>
+			<label for="password" class="flex flex-col gap-1">
+				Password
+				<input type="password" name="password"/>
+			</label>
+			<a href="/login">Already have a password login</a>
+			<button>signup</button>
+		</form>
+	}
+}

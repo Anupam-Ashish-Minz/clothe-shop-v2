@@ -15,6 +15,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/", s.HomePage)
 	r.GET("/health", s.healthHandler)
 
+	r.GET("/login", func(c *gin.Context) {
+		templates.Login().Render(context.Background(), c.Writer)
+	})
+	r.GET("/signup", func(c *gin.Context) {
+		templates.Signup().Render(context.Background(), c.Writer)
+	})
 	r.POST("/login", s.UserLogin)
 	r.POST("/signup", s.UserSignup)
 
