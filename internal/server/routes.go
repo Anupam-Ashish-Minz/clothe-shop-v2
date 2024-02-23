@@ -16,6 +16,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/health", s.healthHandler)
 
 	r.POST("/login", s.UserLogin)
+	r.POST("/signup", s.UserSignup)
 
 	return r
 }
