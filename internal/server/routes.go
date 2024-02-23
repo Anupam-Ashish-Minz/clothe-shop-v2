@@ -5,6 +5,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,6 +25,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/login", s.UserLogin)
 	r.POST("/signup", s.UserSignup)
 
+	r.GET("/products", s.ProductsPage)
+	r.GET("/product/:id", s.ProductPage)
+
 	return r
 }
 
@@ -39,4 +43,29 @@ func (s *Server) HomePage(c *gin.Context) {
 
 func (s *Server) healthHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, s.db.Health())
+}
+
+func (s *Server) ProductsPage(c *gin.Context) {
+	products, err := s.db.GetProducts()
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products")
+		return
+	}
+	templates.Products(products).Render(context.Background(), c.Writer)
+}
+
+func (s *Server) ProductPage(c *gin.Context) {
+	productID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	product, err := s.db.GetProductById(int64(productID))
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products")
+		return
+	}
+	templates.Product(product).Render(context.Background(), c.Writer)
 }

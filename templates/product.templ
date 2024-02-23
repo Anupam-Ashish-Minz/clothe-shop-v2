@@ -1,0 +1,21 @@
+package templates 
+
+import (
+	"clothe-shop-v2/internal/database"
+	"strconv"
+)
+
+templ Products(products []database.Product) {
+	<h1>list of products</h1>
+	<ul>
+		for _, product := range products {
+			<li>{ product.Name }</li>
+		}
+	</ul>
+}
+
+templ Product(product database.Product) {
+	<h1>{ product.Name }</h1>
+	<div>{ product.Description }</div>
+	<div>{ strconv.Itoa(product.Price) }</div>
+}

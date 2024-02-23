@@ -28,7 +28,7 @@ func (s *service) AddProduct(product Product) (int64, error) {
 	return res.LastInsertId()
 }
 
-func (s *service) getProductById(productID int64) (Product, error) {
+func (s *service) GetProductById(productID int64) (Product, error) {
 	var product Product
 	row := s.db.QueryRow(`select id, name, price, description where id = ?`, productID)
 	row.Scan(&product.ID, &product.Name, &product.Price, &product.Description)
@@ -42,7 +42,7 @@ func (s *service) UpdateProduct(product Product) error {
 	if product.ID == 0 {
 		return fmt.Errorf("failed to find product by id")
 	}
-	orignalProduct, err := s.getProductById(product.ID)
+	orignalProduct, err := s.GetProductById(product.ID)
 	if err != nil {
 		return err
 	}
