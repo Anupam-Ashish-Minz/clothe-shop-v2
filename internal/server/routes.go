@@ -28,6 +28,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/products", s.ProductsPage)
 	r.GET("/product/:id", s.ProductPage)
 
+	r.POST("/admin/product/add", s.AddNewProduct)
+
 	return r
 }
 
