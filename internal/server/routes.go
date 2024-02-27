@@ -13,6 +13,8 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 	r.StaticFile("/static/output.css", "./templates/output.css")
+	r.StaticFile("/static/htmx.min.js", "./static/htmx.min.js")
+
 	r.GET("/", s.HomePage)
 	r.GET("/health", s.healthHandler)
 
@@ -35,13 +37,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HomePage(c *gin.Context) {
-	products, err := s.db.GetProducts()
-	if err != nil {
-		log.Println(err)
-		c.String(http.StatusInternalServerError, "failed to fetch products")
-		return
-	}
-	templates.Index(products).Render(context.Background(), c.Writer)
+	templates.Index().Render(context.Background(), c.Writer)
 }
 
 func (s *Server) healthHandler(c *gin.Context) {
