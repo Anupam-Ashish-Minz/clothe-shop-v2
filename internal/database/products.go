@@ -2,6 +2,14 @@ package database
 
 import "fmt"
 
+type Product struct {
+	ID          int64
+	Name        string
+	Description string
+	Gender      string
+	Price       int
+}
+
 func (s *service) GetProducts() ([]Product, error) {
 	products := make([]Product, 0)
 	var p Product
