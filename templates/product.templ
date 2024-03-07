@@ -7,15 +7,18 @@ import (
 
 templ Products(products []database.Product) {
 	<h1>list of products</h1>
-	<ul>
+	<div class="product-list">
 		for _, product := range products {
-			<li>{ product.Name }</li>
+			@Product(product)
 		}
-	</ul>
+	</div>
 }
 
 templ Product(product database.Product) {
-	<h1>{ product.Name }</h1>
-	<div>{ product.Description }</div>
-	<div>{ strconv.Itoa(product.Price) }</div>
+	<div class="product-container">
+		<div>{ product.Name }</div>
+		<div>{ product.Description }</div>
+		<div>$ { strconv.Itoa(product.Price) }</div>
+		<button>add to cart</button>
+	</div>
 }
