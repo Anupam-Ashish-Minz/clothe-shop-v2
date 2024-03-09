@@ -2,17 +2,22 @@ package templates
 
 templ Login() {
 	@Base() {
-		<form action="/login" method="POST" class="flex flex-col gap-2 items-start">
+		<form
+			action="/login"
+			method="POST"
+			class="flex flex-col gap-2
+			items-start p-8"
+		>
 			<label for="email" class="flex flex-col gap-1">
 				Email
-				<input type="email" name="email"/>
+				<input type="email" name="email" class="border"/>
 			</label>
 			<label for="password" class="flex flex-col gap-1">
 				Password
-				<input type="password" name="password"/>
+				<input type="password" name="password" class="border"/>
 			</label>
 			<a href="/signup">Don't have a password signup</a>
-			<button>login</button>
+			<button class="bg-blue-500 rounded px-2 py-1 text-white">login</button>
 		</form>
 	}
 }
