@@ -6,19 +6,24 @@ import (
 )
 
 templ Products(products []database.Product) {
-	<h1>list of products</h1>
-	<div class="product-list">
-		for _, product := range products {
-			@Product(product)
-		}
-	</div>
+	@Base() {
+		<main class="px-8">
+			<h1 class="text-xl font-bold underline uppercase my-4">list of products</h1>
+			<div class="flex flex-row flex-wrap gap-4">
+				for _, product := range products {
+					@Product(product)
+				}
+			</div>
+		</main>
+	}
 }
 
 templ Product(product database.Product) {
-	<div class="product-container">
-		<div>{ product.Name }</div>
+	<div class="mb-8 flex flex-col gap-2 p-4">
+		<img src="" alt="" style="width: 512px; height: 512px"/>
+		<div class="text-lg font-bold">{ product.Name }</div>
 		<div>{ product.Description }</div>
 		<div>$ { strconv.Itoa(product.Price) }</div>
-		<button>add to cart</button>
+		<button class="bg-slate-900 text-white rounded px-2 py-1">add to cart</button>
 	</div>
 }
