@@ -32,6 +32,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/cart", s.CartPage)
 
+	r.GET("/admin", s.AdminPage)
+
 	r.POST("/admin/product/add", s.AddNewProduct)
 	r.POST("/admin/product/update", s.UpdateProduct)
 
@@ -85,4 +87,8 @@ func (s *Server) CartPage(c *gin.Context) {
 		return
 	}
 	templates.Cart(products).Render(context.Background(), c.Writer)
+}
+
+func (s *Server) AdminPage(c *gin.Context) {
+	templates.AdminPage().Render(context.Background(), c.Writer)
 }

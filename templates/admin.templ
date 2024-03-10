@@ -1,0 +1,32 @@
+package templates 
+
+import ()
+
+templ AdminBase() {
+	<!DOCTYPE html>
+	<html lang="en" class="dark:bg-slate-800 dark:text-white dark">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<!--<script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>-->
+			<script src="./static/htmx.min.js"></script>
+			<link rel="stylesheet" href="/static/output.css"/>
+			<title>Document</title>
+		</head>
+		<body>
+			<nav class="flex gap-2 p-2 py-4">
+				<a class="underline" href="/admin">dashboard</a>
+				<a class="underline" href="/admin/products">product management</a>
+				<a class="underline" href="/admin/order">order managemnet</a>
+				<a class="underline" href="/admin/logout">logout</a>
+			</nav>
+			{ children... }
+		</body>
+	</html>
+}
+
+templ AdminPage() {
+	@AdminBase() {
+		<h1>admin page</h1>
+	}
+}
