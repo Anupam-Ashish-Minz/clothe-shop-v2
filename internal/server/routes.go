@@ -41,7 +41,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HomePage(c *gin.Context) {
-	templates.Index().Render(context.Background(), c.Writer)
+	err := templates.Index().Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (s *Server) healthHandler(c *gin.Context) {
@@ -55,7 +58,10 @@ func (s *Server) ProductsPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products")
 		return
 	}
-	templates.Products(products).Render(context.Background(), c.Writer)
+	err = templates.Products(products).Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (s *Server) ProductPage(c *gin.Context) {
@@ -70,7 +76,10 @@ func (s *Server) ProductPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products")
 		return
 	}
-	templates.Product(product).Render(context.Background(), c.Writer)
+	err = templates.Product(product).Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (s *Server) CartPage(c *gin.Context) {
@@ -86,9 +95,15 @@ func (s *Server) CartPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products from cart")
 		return
 	}
-	templates.Cart(products).Render(context.Background(), c.Writer)
+	err = templates.Cart(products).Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (s *Server) AdminPage(c *gin.Context) {
-	templates.AdminPage().Render(context.Background(), c.Writer)
+	err := templates.AdminPage().Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+	}
 }
