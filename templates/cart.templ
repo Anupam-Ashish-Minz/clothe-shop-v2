@@ -1,0 +1,28 @@
+package templates
+
+import (
+	"clothe-shop-v2/internal/database"
+	"strconv"
+)
+
+func totalPrice(products []database.Product) int {
+	total := 0
+	for _, product := range products {
+		total += product.Price
+	}
+	return total
+}
+
+templ Cart(products []database.Product) {
+	@Base() {
+		<div>
+			for _, product := range products {
+				<div>
+					<div>{ product.Name }</div>
+					<div>{ strconv.Itoa(product.Price) }</div>
+				</div>
+			}
+			<div>total = { strconv.Itoa(totalPrice(products)) }</div>
+		</div>
+	}
+}

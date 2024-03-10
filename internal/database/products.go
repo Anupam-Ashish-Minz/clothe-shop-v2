@@ -67,3 +67,17 @@ func (s *service) UpdateProduct(product Product) error {
 		product.Name, product.Description, product.Price, product.ID)
 	return fmt.Errorf("not implemented")
 }
+
+func (s *service) ProductsInCart(userID int64) ([]Product, error) {
+	products := make([]Product, 0)
+	var product Product
+	rows, err := s.db.Query(`select id, name, description, price, gender from products`)
+	if err != nil {
+		return products, err
+	}
+	for rows.Next() {
+		rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Gender)
+		products = append(products, product)
+	}
+	return products, nil
+}

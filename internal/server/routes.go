@@ -30,6 +30,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/products", s.ProductsPage)
 	r.GET("/product/:id", s.ProductPage)
 
+	r.GET("/cart", s.CartPage)
+
 	r.POST("/admin/product/add", s.AddNewProduct)
 	r.POST("/admin/product/update", s.UpdateProduct)
 
@@ -67,4 +69,20 @@ func (s *Server) ProductPage(c *gin.Context) {
 		return
 	}
 	templates.Product(product).Render(context.Background(), c.Writer)
+}
+
+func (s *Server) CartPage(c *gin.Context) {
+	userID, err := s.Authenticate(c)
+	if err != nil {
+		log.Println(err)
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		return
+	}
+	products, err := s.db.ProductsInCart(userID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products from cart")
+		return
+	}
+	templates.Cart(products).Render(context.Background(), c.Writer)
 }

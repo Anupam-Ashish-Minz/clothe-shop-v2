@@ -85,3 +85,26 @@ func (s *Server) UserSignup(c *gin.Context) {
 	}
 	c.SetCookie("auth-token", tokenString, 86400, "/", "localhost", false, true)
 }
+
+func (s *Server) Authenticate(c *gin.Context) (int64, error) {
+	tokenString, err := c.Cookie("auth-token")
+	if err != nil {
+		return 0, err
+	}
+	if tokenString == "" {
+		return 0, fmt.Errorf("auth token not found")
+	}
+	userID, err := parseToken(tokenString, s.secret)
+	if err != nil {
+		return 0, err
+	}
+
+	user, err := s.db.GetUserById(userID)
+	if err != nil {
+		return 0, err
+	}
+	if user.ID == 0 || user.Email == "" {
+		return 0, fmt.Errorf("user authentication failed")
+	}
+	return userID, nil
+}
