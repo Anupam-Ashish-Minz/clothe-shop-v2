@@ -30,3 +30,13 @@ func (s *service) AddNewUser(user User) (int64, error) {
 	}
 	return res.LastInsertId()
 }
+
+func (s *service) GetUserById(userID int64) (User, error) {
+	var user User
+	row := s.db.QueryRow(`select id, name, email, password from users where id = ?`, userID)
+	row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	if user.ID == 0 || user.Email == "" {
+		return user, fmt.Errorf("user not found")
+	}
+	return user, nil
+}

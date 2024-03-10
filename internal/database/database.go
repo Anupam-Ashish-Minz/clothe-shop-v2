@@ -19,6 +19,7 @@ type Service interface {
 	AddProduct(product Product) (int64, error)
 	UpdateProduct(product Product) error
 	GetUserByEmail(email string) (User, error)
+	GetUserById(userID int64) (User, error)
 	AddNewUser(user User) (int64, error)
 }
 
