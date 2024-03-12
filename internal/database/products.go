@@ -64,7 +64,13 @@ func (s *service) UpdateProduct(product Product) error {
 	if product.Price == 0 {
 		product.Price = orignalProduct.Price
 	}
-	s.db.Exec(`update Product set name = ?, description = ?, price = ? where id = ?`,
+	if product.Image == "" {
+		product.Image = orignalProduct.Image
+	}
+	if product.Gender == "" {
+		product.Gender = orignalProduct.Gender
+	}
+	s.db.Exec(`update Product set name = ?, description = ?, price = ?, gender = ?, image = ? where id = ?`,
 		product.Name, product.Description, product.Price, product.ID)
 	return fmt.Errorf("not implemented")
 }
@@ -72,7 +78,7 @@ func (s *service) UpdateProduct(product Product) error {
 func (s *service) ProductsInCart(userID int64) ([]Product, error) {
 	products := make([]Product, 0)
 	var product Product
-	rows, err := s.db.Query(`select id, name, description, price, gender from products`)
+	rows, err := s.db.Query(`select id, name, description, price, gender from Product`)
 	if err != nil {
 		return products, err
 	}
