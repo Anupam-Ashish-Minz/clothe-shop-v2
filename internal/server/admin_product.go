@@ -4,11 +4,17 @@ import (
 	"clothe-shop-v2/internal/database"
 	"clothe-shop-v2/templates"
 	"context"
+	"fmt"
+	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func (s *Server) AddNewProduct(c *gin.Context) {
@@ -22,13 +28,44 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 		c.String(http.StatusBadRequest, "invalid values of price")
 		return
 	}
-	product.ID, err = s.db.AddProduct(product)
+	img, imgHeader, err := c.Request.FormFile("image")
 	if err != nil {
 		log.Println(err)
-		c.String(http.StatusInternalServerError, "failed to add the product")
 		return
 	}
-	templates.Product(product).Render(context.Background(), c.Writer)
+
+	writeMultipartImage := func(img multipart.File, imageName string) error {
+		sFilenames := strings.Split(imageName, ".")
+		fileExt := sFilenames[len(sFilenames)-1]
+		if fileExt != "png" && fileExt != "jpeg" && fileExt != "jpg" {
+			return fmt.Errorf("file extension not found")
+		}
+		filename := "./data/images/" + uuid.New().String() + "." + fileExt
+
+		buf, err := io.ReadAll(img)
+		if err != nil {
+			return err
+		}
+		err = os.WriteFile(filename, buf, 0644)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	err = writeMultipartImage(img, imgHeader.Filename)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to write the image")
+	}
+
+	// product.ID, err = s.db.AddProduct(product)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	c.String(http.StatusInternalServerError, "failed to add the product")
+	// 	return
+	// }
+	// templates.Product(product).Render(context.Background(), c.Writer)
 }
 
 func (s *Server) UpdateProduct(c *gin.Context) {
