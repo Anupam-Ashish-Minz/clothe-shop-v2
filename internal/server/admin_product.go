@@ -21,6 +21,11 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 	var product database.Product
 	var err error
 	product.Name = c.PostForm("name")
+	product.Gender = c.PostForm("gender")
+	if product.Name == "" || product.Gender == "" {
+		c.String(http.StatusBadRequest, "missing fields in product")
+		return
+	}
 	product.Description = c.PostForm("description")
 	product.Price, err = strconv.Atoi(c.PostForm("price"))
 	if err != nil {
@@ -60,12 +65,12 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 	}
 	product.Image = imageName
 
-	// product.ID, err = s.db.AddProduct(product)
-	// if err != nil {
-	// 	log.Println(err)
-	// 	c.String(http.StatusInternalServerError, "failed to add the product")
-	// 	return
-	// }
+	product.ID, err = s.db.AddProduct(product)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to add the product")
+		return
+	}
 	// templates.Product(product).Render(context.Background(), c.Writer)
 }
 

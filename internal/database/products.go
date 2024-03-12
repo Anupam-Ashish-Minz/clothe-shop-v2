@@ -26,11 +26,11 @@ func (s *service) GetProducts() ([]Product, error) {
 }
 
 func (s *service) AddProduct(product Product) (int64, error) {
-	if product.Name == "" || product.Price == 0 {
-		return 0, fmt.Errorf("empty name or price for product")
+	if product.Name == "" || product.Price == 0 || product.Gender == "" || product.Image == "" {
+		return 0, fmt.Errorf(fmt.Sprint("empty fields in product struct", product))
 	}
-	res, err := s.db.Exec(`insert into products (name, price, description) value (?, ?, ?)`,
-		product.Name, product.Price, product.Description)
+	res, err := s.db.Exec(`insert into Product (name, price, description, gender, image) values (?, ?, ?, ?, ?)`,
+		product.Name, product.Price, product.Description, product.Gender, product.Image)
 	if err != nil {
 		return 0, err
 	}
