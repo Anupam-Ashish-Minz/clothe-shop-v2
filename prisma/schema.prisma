@@ -15,7 +15,8 @@ model Product {
   name String 
   description String?
   price Int
-  gender String?
+  gender String
+  image String
 }
 
 model User {
