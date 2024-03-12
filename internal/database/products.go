@@ -8,6 +8,7 @@ type Product struct {
 	Description string
 	Gender      string
 	Price       int
+	Image       string
 }
 
 func (s *service) GetProducts() ([]Product, error) {

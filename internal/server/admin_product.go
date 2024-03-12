@@ -34,30 +34,31 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 		return
 	}
 
-	writeMultipartImage := func(img multipart.File, imageName string) error {
-		sFilenames := strings.Split(imageName, ".")
+	writeMultipartImage := func(img multipart.File, imgHeader *multipart.FileHeader) (string, error) {
+		sFilenames := strings.Split(imgHeader.Filename, ".")
 		fileExt := sFilenames[len(sFilenames)-1]
 		if fileExt != "png" && fileExt != "jpeg" && fileExt != "jpg" {
-			return fmt.Errorf("file extension not found")
+			return "", fmt.Errorf("file extension not found")
 		}
-		filename := "./data/images/" + uuid.New().String() + "." + fileExt
+		outFilename := "./data/images/" + uuid.New().String() + "." + fileExt
 
 		buf, err := io.ReadAll(img)
 		if err != nil {
-			return err
+			return outFilename, err
 		}
-		err = os.WriteFile(filename, buf, 0644)
+		err = os.WriteFile(outFilename, buf, 0644)
 		if err != nil {
-			return err
+			return outFilename, err
 		}
-		return nil
+		return outFilename, nil
 	}
 
-	err = writeMultipartImage(img, imgHeader.Filename)
+	imageName, err := writeMultipartImage(img, imgHeader)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to write the image")
 	}
+	product.Image = imageName
 
 	// product.ID, err = s.db.AddProduct(product)
 	// if err != nil {
