@@ -14,6 +14,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 	r.StaticFile("/static/output.css", "./templates/output.css")
 	r.StaticFile("/static/htmx.min.js", "./static/htmx.min.js")
+	r.Static("/static/images/", "./data/images")
 
 	r.GET("/", s.HomePage)
 	r.GET("/health", s.healthHandler)

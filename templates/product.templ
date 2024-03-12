@@ -20,7 +20,7 @@ templ Products(products []database.Product) {
 
 templ Product(product database.Product) {
 	<div class="mb-8 flex flex-col gap-2 p-4">
-		<img src="" alt="" style="width: 512px; height: 512px"/>
+		<img src={ "/static/images/" + product.Image } alt="" style="width: 512px; height: 512px"/>
 		<div class="text-lg font-bold">{ product.Name }</div>
 		<div>{ product.Description }</div>
 		<div>$ { strconv.Itoa(product.Price) }</div>

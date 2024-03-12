@@ -45,13 +45,13 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 		if fileExt != "png" && fileExt != "jpeg" && fileExt != "jpg" {
 			return "", fmt.Errorf("file extension not found")
 		}
-		outFilename := "./data/images/" + uuid.New().String() + "." + fileExt
+		outFilename := uuid.New().String() + "." + fileExt
 
 		buf, err := io.ReadAll(img)
 		if err != nil {
 			return outFilename, err
 		}
-		err = os.WriteFile(outFilename, buf, 0644)
+		err = os.WriteFile("./data/images/"+outFilename, buf, 0644)
 		if err != nil {
 			return outFilename, err
 		}
