@@ -14,12 +14,12 @@ type Product struct {
 func (s *service) GetProducts() ([]Product, error) {
 	products := make([]Product, 0)
 	var p Product
-	rows, err := s.db.Query(`select id, name, description, price from Product`)
+	rows, err := s.db.Query(`select id, name, description, price, gender, image from Product`)
 	if err != nil {
 		return products, err
 	}
 	for rows.Next() {
-		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price)
+		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Gender, &p.Image)
 		products = append(products, p)
 	}
 	return products, nil
@@ -39,8 +39,8 @@ func (s *service) AddProduct(product Product) (int64, error) {
 
 func (s *service) GetProductById(productID int64) (Product, error) {
 	var product Product
-	row := s.db.QueryRow(`select id, name, price, description where id = ?`, productID)
-	row.Scan(&product.ID, &product.Name, &product.Price, &product.Description)
+	row := s.db.QueryRow(`select id, name, price, description, gender, image from Product where id = ?`, productID)
+	row.Scan(&product.ID, &product.Name, &product.Price, &product.Description, &product.Gender, &product.Image)
 	if product.ID == 0 {
 		return product, fmt.Errorf("no such product exists")
 	}
