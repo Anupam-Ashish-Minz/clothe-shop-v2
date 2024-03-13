@@ -23,6 +23,7 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 	product.Name = c.PostForm("name")
 	product.Gender = c.PostForm("gender")
 	if product.Name == "" || product.Gender == "" {
+		log.Println("missing fields in product", product)
 		c.String(http.StatusBadRequest, "missing fields in product")
 		return
 	}
@@ -36,6 +37,7 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 	img, imgHeader, err := c.Request.FormFile("image")
 	if err != nil {
 		log.Println(err)
+		c.String(http.StatusBadRequest, "image not found")
 		return
 	}
 
@@ -62,6 +64,7 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to write the image")
+		return
 	}
 	product.Image = imageName
 
