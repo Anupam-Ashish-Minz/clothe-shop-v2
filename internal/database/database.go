@@ -22,6 +22,7 @@ type Service interface {
 	GetUserById(userID int64) (User, error)
 	AddNewUser(user User) (int64, error)
 	ProductsInCart(userID int64) ([]Product, error)
+	AddProductInCart(productID int64, quantity int) error
 }
 
 type service struct {
