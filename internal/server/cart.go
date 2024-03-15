@@ -22,5 +22,10 @@ func (s *Server) AddToCart(c *gin.Context) {
 		return
 	}
 
-	s.db.AddProductToCart(int64(productID), quantity)
+	err = s.db.AddProductInCart(int64(productID), quantity)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "falied to add data to the cart")
+		return
+	}
 }
