@@ -14,7 +14,7 @@ type Product struct {
 func (s *service) GetProducts() ([]Product, error) {
 	products := make([]Product, 0)
 	var p Product
-	rows, err := s.db.Query(`select id, name, description, price, gender, image from Product`)
+	rows, err := s.db.Query(`select id, name, description, price, gender, image from Product limit 10`)
 	if err != nil {
 		return products, err
 	}
