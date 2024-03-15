@@ -11,10 +11,15 @@ type Product struct {
 	Image       string
 }
 
-func (s *service) GetProducts() ([]Product, error) {
+func (s *service) GetProducts(page int) ([]Product, error) {
+	pageSize := 10
 	products := make([]Product, 0)
 	var p Product
-	rows, err := s.db.Query(`select id, name, description, price, gender, image from Product limit 10`)
+	rows, err := s.db.Query(
+		`select id, name, description, price, gender, image from 
+		Product limit ? offset ?`,
+		pageSize, page*pageSize,
+	)
 	if err != nil {
 		return products, err
 	}

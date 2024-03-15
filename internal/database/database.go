@@ -14,7 +14,7 @@ import (
 
 type Service interface {
 	Health() map[string]string
-	GetProducts() ([]Product, error)
+	GetProducts(page int) ([]Product, error)
 	GetProductById(productID int64) (Product, error)
 	AddProduct(product Product) (int64, error)
 	UpdateProduct(product Product) error

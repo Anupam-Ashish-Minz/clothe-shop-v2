@@ -54,7 +54,7 @@ func (s *Server) healthHandler(c *gin.Context) {
 }
 
 func (s *Server) ProductsPage(c *gin.Context) {
-	products, err := s.db.GetProducts()
+	products, err := s.db.GetProducts(0)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to fetch products")
