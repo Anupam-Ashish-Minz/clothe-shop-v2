@@ -29,6 +29,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/signup", s.UserSignup)
 
 	r.GET("/products", s.ProductsPage)
+	r.GET("/api/products/", s.FetchProducts)
 	r.GET("/product/:id", s.ProductPage)
 
 	r.GET("/cart", s.CartPage)
@@ -40,6 +41,30 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/admin/product/update", s.UpdateProduct)
 
 	return r
+}
+
+func (s *Server) FetchProducts(c *gin.Context) {
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		log.Println(err)
+		page = 0
+	}
+	products, err := s.db.GetProducts(page)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products")
+		return
+	}
+	if len(products) < 1 {
+		c.String(http.StatusBadRequest, "there are no products in this page")
+		return
+	}
+	err = templates.Products(products, page+1).Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to load products")
+		return
+	}
 }
 
 func (s *Server) HomePage(c *gin.Context) {
@@ -60,9 +85,14 @@ func (s *Server) ProductsPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products")
 		return
 	}
-	err = templates.Products(products).Render(context.Background(), c.Writer)
+	if len(products) < 1 {
+		c.String(http.StatusBadRequest, "no products found")
+		return
+	}
+	err = templates.ProductsPage(products).Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)
+		c.String(http.StatusInternalServerError, "unable to render template")
 	}
 }
 
