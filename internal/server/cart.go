@@ -21,8 +21,12 @@ func (s *Server) AddToCart(c *gin.Context) {
 		c.String(http.StatusBadRequest, "cannot add product to cart, product id is missing")
 		return
 	}
-
-	err = s.db.AddProductInCart(int64(productID), quantity)
+	userID, err := s.Authenticate(c)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusUnauthorized, "login required to add item to cart")
+	}
+	err = s.db.AddProductInCart(userID, int64(productID), quantity)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "falied to add data to the cart")
