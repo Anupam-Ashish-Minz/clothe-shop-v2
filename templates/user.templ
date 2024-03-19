@@ -10,11 +10,19 @@ templ Login() {
 		>
 			<label for="email" class="flex flex-col gap-1">
 				Email
-				<input type="email" name="email" class="border"/>
+				<input
+					type="email"
+					name="email"
+					class="border text-black"
+				/>
 			</label>
 			<label for="password" class="flex flex-col gap-1">
 				Password
-				<input type="password" name="password" class="border"/>
+				<input
+					type="password"
+					name="password"
+					class="border text-black"
+				/>
 			</label>
 			<a href="/signup" class="underline text-blue-300">Don't have a password signup</a>
 			<button class="bg-blue-500 rounded px-2 py-1 text-white">login</button>
@@ -32,15 +40,15 @@ templ Signup() {
 		>
 			<label for="name" class="flex flex-col gap-1">
 				Name
-				<input type="name" name="name"/>
+				<input type="name" name="name" class="text-black"/>
 			</label>
 			<label for="email" class="flex flex-col gap-1">
 				Email
-				<input type="email" name="email"/>
+				<input type="email" name="email" class="text-black"/>
 			</label>
 			<label for="password" class="flex flex-col gap-1">
 				Password
-				<input type="password" name="password"/>
+				<input type="password" name="password" class="text-black"/>
 			</label>
 			<a href="/login" class="underline text-blue-300">Already have a password login</a>
 			<button class="bg-blue-500 rounded px-2 py-1 text-white">signup</button>
