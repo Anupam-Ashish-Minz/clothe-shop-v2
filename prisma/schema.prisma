@@ -17,6 +17,7 @@ model Product {
   price Int
   gender String
   image String
+  carts Cart[]
 }
 
 model User {
@@ -24,4 +25,14 @@ model User {
   name String
   email String @unique
   password String 
+  carts Cart[]
+}
+
+model Cart {
+  productId Int 
+  product Product @relation(fields: [productId], references: [id])
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  quantity Int
+  @@id([productId, userId])
 }
