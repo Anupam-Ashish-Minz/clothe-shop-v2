@@ -109,10 +109,11 @@ func (s *Server) ProductPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products")
 		return
 	}
-	err = templates.Product(product).Render(context.Background(), c.Writer)
-	if err != nil {
-		log.Println(err)
-	}
+	log.Println(product)
+	// err = templates.Product(product).Render(context.Background(), c.Writer)
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 }
 
 func (s *Server) CartPage(c *gin.Context) {

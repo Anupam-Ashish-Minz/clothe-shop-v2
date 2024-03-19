@@ -2,8 +2,6 @@ package server
 
 import (
 	"clothe-shop-v2/internal/database"
-	"clothe-shop-v2/templates"
-	"context"
 	"fmt"
 	"io"
 	"log"
@@ -94,5 +92,5 @@ func (s *Server) UpdateProduct(c *gin.Context) {
 		c.String(http.StatusBadRequest, "failed to update the product")
 		return
 	}
-	templates.Product(product).Render(context.Background(), c.Writer)
+	// templates.Product(product).Render(context.Background(), c.Writer)
 }

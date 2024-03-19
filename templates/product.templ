@@ -24,18 +24,16 @@ templ ProductsPage(products []database.Product) {
 	}
 }
 
-templ Products(products []database.Product, page int) {
-	for i, product := range products {
-		if i != len(products) - 1 {
-			@Product(product)
+templ Product(product database.Product, page int, last bool) {
+	<div
+		class="mb-8 flex flex-col gap-2 p-4"
+		if last {
+			hx-get={ "/api/products?page=" + strconv.Itoa(page) }
+			hx-trigger="revealed"
+			hx-swap="afterend"
 		}
-	}
-	@LastProduct(products[len(products)-1], page)
-}
-
-templ Product(product database.Product) {
-	<div class="mb-8 flex flex-col gap-2 p-4">
-		<img src={ "/static/images/optimized/" + pngToJpeg(product.Image) } alt="" style="width: 512px; height: 512px"/>
+	>
+		<img src={ "/static/images/" + product.Image } alt="" style="width: 512px; height: 512px"/>
 		<div class="text-lg font-bold">{ product.Name }</div>
 		<div>{ product.Description }</div>
 		<div>$ { strconv.Itoa(product.Price) }</div>
@@ -72,17 +70,8 @@ templ Product(product database.Product) {
 	</div>
 }
 
-templ LastProduct(product database.Product, page int) {
-	<div
-		class="mb-8 flex flex-col gap-2 p-4"
-		hx-get={ "/api/products?page=" + strconv.Itoa(page) }
-		hx-trigger="revealed"
-		hx-swap="afterend"
-	>
-		<img src={ "/static/images/" + product.Image } alt="" style="width: 512px; height: 512px"/>
-		<div class="text-lg font-bold">{ product.Name }</div>
-		<div>{ product.Description }</div>
-		<div>$ { strconv.Itoa(product.Price) }</div>
-		<button class="bg-slate-900 text-white rounded px-2 py-1">add to cart</button>
-	</div>
+templ Products(products []database.Product, page int) {
+	for i, product := range products {
+		@Product(product, page, i == len(products)-1)
+	}
 }
