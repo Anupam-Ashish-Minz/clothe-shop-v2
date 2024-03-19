@@ -1,12 +1,33 @@
 package server
 
 import (
+	"clothe-shop-v2/templates"
+	"context"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
+
+func (s *Server) CartPage(c *gin.Context) {
+	userID, err := s.Authenticate(c)
+	if err != nil {
+		log.Println(err)
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		return
+	}
+	products, err := s.db.ProductsInCart(userID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products from cart")
+		return
+	}
+	err = templates.Cart(products).Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+	}
+}
 
 func (s *Server) AddToCart(c *gin.Context) {
 	productID, err := strconv.Atoi(c.PostForm("product_id"))
