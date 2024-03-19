@@ -14,7 +14,6 @@ func pngToJpeg(filename string) string {
 
 templ ProductsPage(products []database.Product) {
 	@Base() {
-		<script defer src="/static/alpine.min.js"></script>
 		<main class="px-8">
 			<h1 class="text-xl font-bold underline uppercase my-4">list of products</h1>
 			<div class="flex flex-row flex-wrap gap-4">
@@ -63,9 +62,9 @@ templ Product(product database.Product, page int, last bool) {
 				value={ strconv.Itoa(int(product.ID)) }
 				class="hidden"
 			/>
-			<button
-				class="bg-slate-900 text-white rounded px-2 py-2"
-			>add to cart</button>
+			<button class="bg-slate-900 text-white rounded px-2 py-2">
+				add to cart
+			</button>
 		</form>
 	</div>
 }
