@@ -59,6 +59,7 @@ func (s *Server) UserLogin(c *gin.Context) {
 		return
 	}
 	c.SetCookie("auth-token", tokenString, 86400, "/", "localhost", false, true)
+	c.Redirect(http.StatusFound, "/products")
 }
 
 func (s *Server) UserSignup(c *gin.Context) {
