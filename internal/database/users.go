@@ -33,8 +33,11 @@ func (s *service) AddNewUser(user User) (int64, error) {
 
 func (s *service) GetUserById(userID int64) (User, error) {
 	var user User
-	row := s.db.QueryRow(`select id, name, email, password from users where id = ?`, userID)
-	row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	row := s.db.QueryRow(`select id, name, email, password from User where id = ?`, userID)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	if err != nil {
+		return user, err
+	}
 	if user.ID == 0 || user.Email == "" {
 		return user, fmt.Errorf("user not found")
 	}
