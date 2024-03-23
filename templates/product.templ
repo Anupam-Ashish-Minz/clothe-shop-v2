@@ -23,6 +23,13 @@ templ ProductsPage(products []database.Product) {
 	}
 }
 
+script addToCartHandler(productID int64) {
+	let x = `addtocart-product-${productID}`;
+	document.getElementById(x).addEventListener("htmx:afterSwap", ()=>{ 
+		showSuccessToast("product added to cart") 
+	});
+}
+
 templ Product(product database.Product, page int, last bool) {
 	<div
 		class="mb-8 flex flex-col gap-2 p-4"
@@ -36,7 +43,15 @@ templ Product(product database.Product, page int, last bool) {
 		<div class="text-lg font-bold">{ product.Name }</div>
 		<div>{ product.Description }</div>
 		<div>$ { strconv.Itoa(product.Price) }</div>
-		<form hx-post="/api/cart/add" class="flex flex-col gap-4">
+		<script>
+		</script>
+		<form
+			hx-post="/api/cart/add"
+			class="flex flex-col gap-4"
+			hx-swap="none"
+			id={ "addtocart-product-" + strconv.Itoa(int(product.ID)) }
+			onsubmit={ addToCartHandler(product.ID) }
+		>
 			Quantity
 			<div class="flex flex-row gap-2">
 				<button

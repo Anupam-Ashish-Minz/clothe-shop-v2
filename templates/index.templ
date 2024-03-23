@@ -29,6 +29,10 @@ templ Base() {
 	color: while;
 	background-color: red;
 }
+.success-toast {
+	color: while;
+	background-color: green;
+}
 			</style>
 			<script>
 				function showErrorToast(message) {
@@ -41,10 +45,23 @@ templ Base() {
 					}, 3000);
 				}
 
+				function showSuccessToast(message) {
+					const toast = document.createElement('div');
+					toast.className = 'toast success-toast';
+					toast.textContent = message;
+					document.body.appendChild(toast);
+					setTimeout(() => {
+						document.body.removeChild(toast);
+					}, 3000);
+				}
+
 				function main() {
 					document.body.addEventListener('htmx:responseError', (event)=>{
 						if (event.detail.xhr.status == 401) {
 							showErrorToast('login required');
+						}
+						if (event.detail.xhr.status == 500) {
+							showErrorToast('request failed from server end');
 						}
 					})
 				}
