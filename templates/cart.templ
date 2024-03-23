@@ -15,12 +15,20 @@ func totalPrice(products []database.OrderItem) int {
 
 templ Cart(products []database.OrderItem) {
 	@Base() {
-		<div>
+		<div class="flex flex-col gap-4">
 			for _, product := range products {
-				<div>
-					<div>{ product.Name }</div>
-					<div>{ strconv.Itoa(product.Quantity) }</div>
-					<div>{ strconv.Itoa(product.Price) }</div>
+				<div class="flex flex-row items-center">
+					<img src={ "/static/images/" + product.Image } alt=""/>
+					<div class="flex flex-col gap-2 ml-8">
+						<div>{ product.Name }</div>
+						<div class="flex flex-row gap-4">
+							<button class="bg-slate-900 rounded px-4">-</button>
+							<div>{ strconv.Itoa(product.Quantity) }</div>
+							<button class="bg-slate-900 rounded px-4">+</button>
+						</div>
+						<div>{ strconv.Itoa(product.Price * product.Quantity) }</div>
+						<button class="bg-red-500 text-white py-1 px-2 rounded">remove from cart</button>
+					</div>
 				</div>
 			}
 			<div>total = { strconv.Itoa(totalPrice(products)) }</div>
