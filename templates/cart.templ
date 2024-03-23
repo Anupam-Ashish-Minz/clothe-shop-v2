@@ -5,20 +5,21 @@ import (
 	"strconv"
 )
 
-func totalPrice(products []database.Product) int {
+func totalPrice(products []database.OrderItem) int {
 	total := 0
 	for _, product := range products {
-		total += product.Price
+		total += product.Price * product.Quantity
 	}
 	return total
 }
 
-templ Cart(products []database.Product) {
+templ Cart(products []database.OrderItem) {
 	@Base() {
 		<div>
 			for _, product := range products {
 				<div>
 					<div>{ product.Name }</div>
+					<div>{ strconv.Itoa(product.Quantity) }</div>
 					<div>{ strconv.Itoa(product.Price) }</div>
 				</div>
 			}

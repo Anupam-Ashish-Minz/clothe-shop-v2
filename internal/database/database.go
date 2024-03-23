@@ -21,7 +21,7 @@ type Service interface {
 	GetUserByEmail(email string) (User, error)
 	GetUserById(userID int64) (User, error)
 	AddNewUser(user User) (int64, error)
-	ProductsInCart(userID int64) ([]Product, error)
+	ProductsInCart(userID int64) ([]OrderItem, error)
 	AddProductInCart(userID int64, productID int64, quantity int) error
 }
 

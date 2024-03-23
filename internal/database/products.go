@@ -11,6 +11,16 @@ type Product struct {
 	Image       string
 }
 
+type OrderItem struct {
+	ID          int64
+	Name        string
+	Description string
+	Price       int
+	Gender      string
+	Image       string
+	Quantity    int
+}
+
 func (s *service) GetProducts(page int) ([]Product, error) {
 	pageSize := 10
 	products := make([]Product, 0)
@@ -80,9 +90,9 @@ func (s *service) UpdateProduct(product Product) error {
 	return fmt.Errorf("not implemented")
 }
 
-func (s *service) ProductsInCart(userID int64) ([]Product, error) {
-	products := make([]Product, 0)
-	var product Product
+func (s *service) ProductsInCart(userID int64) ([]OrderItem, error) {
+	products := make([]OrderItem, 0)
+	var product OrderItem
 	rows, err := s.db.Query(`select p.id, p.name, p.description, p.price,
 		p.gender, p.image, c.quantity from User as u join Cart as c on u.id =
 		c.userId join Product as p on c.productId = p.id where c.userId = ?`,
@@ -91,7 +101,7 @@ func (s *service) ProductsInCart(userID int64) ([]Product, error) {
 		return products, err
 	}
 	for rows.Next() {
-		rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Gender)
+		rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Gender, &product.Image, &product.Quantity)
 		products = append(products, product)
 	}
 	return products, nil
