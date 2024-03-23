@@ -12,6 +12,47 @@ templ Base() {
 			<script defer src="./static/htmx.min.js"></script>
 			<link rel="stylesheet" href="/static/output.css"/>
 			<title>Document</title>
+			<style>
+.toast {
+	padding-left: 4rem;
+	padding-right: 4rem;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	position: fixed;
+	border-radius: 4px;
+	top: 0;
+	right: 0;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+.error-toast {
+	color: while;
+	background-color: red;
+}
+			</style>
+			<script>
+				function showErrorToast(message) {
+					const toast = document.createElement('div');
+					toast.className = 'toast error-toast';
+					toast.textContent = 'Error: ' + message;
+					document.body.appendChild(toast);
+					setTimeout(() => {
+						document.body.removeChild(toast);
+					}, 3000);
+				}
+
+				function main() {
+					document.body.addEventListener('htmx:responseError', (event)=>{
+						if (event.detail.xhr.status == 401) {
+							showErrorToast('login required');
+						}
+					})
+				}
+
+				window.addEventListener('DOMContentLoaded', () => {
+					main();
+				})
+			</script>
 		</head>
 		<body>
 			<nav class="flex gap-2 p-2 py-4">
