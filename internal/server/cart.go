@@ -46,6 +46,7 @@ func (s *Server) AddToCart(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusUnauthorized, "login required to add item to cart")
+		return
 	}
 	err = s.db.AddProductInCart(userID, int64(productID), quantity)
 	if err != nil {

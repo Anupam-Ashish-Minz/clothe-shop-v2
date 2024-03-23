@@ -83,7 +83,10 @@ func (s *service) UpdateProduct(product Product) error {
 func (s *service) ProductsInCart(userID int64) ([]Product, error) {
 	products := make([]Product, 0)
 	var product Product
-	rows, err := s.db.Query(`select id, name, description, price, gender from Product`)
+	rows, err := s.db.Query(`select p.id, p.name, p.description, p.price,
+		p.gender, p.image, c.quantity from User as u join Cart as c on u.id =
+		c.userId join Product as p on c.productId = p.id where c.userId = ?`,
+		userID)
 	if err != nil {
 		return products, err
 	}
