@@ -48,10 +48,20 @@ func (s *Server) AddToCart(c *gin.Context) {
 		c.String(http.StatusUnauthorized, "login required to add item to cart")
 		return
 	}
-	err = s.db.AddProductInCart(userID, int64(productID), quantity)
-	if err != nil {
+	if !s.db.CheckProductInCart(userID, int64(productID)) {
 		log.Println(err)
-		c.String(http.StatusInternalServerError, "falied to add data to the cart")
-		return
+		err = s.db.UpdateCartProductCount(userID, int64(productID), quantity)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	} else {
+		log.Println("insert product in cart query")
+		err = s.db.AddProductInCart(userID, int64(productID), quantity)
+		if err != nil {
+			log.Println(err)
+			c.String(http.StatusInternalServerError, "falied to add data to the cart")
+			return
+		}
 	}
 }
