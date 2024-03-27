@@ -24,7 +24,8 @@ type Service interface {
 	ProductsInCart(userID int64) ([]OrderItem, error)
 	AddProductInCart(userID int64, productID int64, quantity int) error
 	CheckProductInCart(userID int64, productID int64) bool
-	UpdateCartProductCount(userID int64, productID int64, quantity int) error
+	UpdateCartProductCount(userID int64, productID int64, increamentQuantity int) error
+	GetCartItemById(userID int64, productID int64) (OrderItem, error)
 }
 
 type service struct {

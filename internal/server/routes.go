@@ -34,6 +34,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/cart", s.CartPage)
 	r.POST("/api/cart/add/", s.AddToCart)
+	r.POST("/api/cart/increase/:product_id", s.CartIncreaseProductQuantity)
+	r.POST("/api/cart/decrease/:product_id", s.CartDecreaseProductQuantity)
 
 	r.GET("/admin", s.AdminPage)
 

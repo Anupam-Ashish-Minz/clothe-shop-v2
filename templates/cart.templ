@@ -19,19 +19,43 @@ templ Cart(products []database.OrderItem) {
 			for _, product := range products {
 				<div class="flex flex-row items-center">
 					<img src={ "/static/images/" + product.Image } alt=""/>
-					<div class="flex flex-col gap-2 ml-8">
-						<div>{ product.Name }</div>
-						<div class="flex flex-row gap-4">
-							<button class="bg-slate-900 rounded px-4">-</button>
-							<div>{ strconv.Itoa(product.Quantity) }</div>
-							<button class="bg-slate-900 rounded px-4">+</button>
-						</div>
-						<div>{ strconv.Itoa(product.Price * product.Quantity) }</div>
-						<button class="bg-red-500 text-white py-1 px-2 rounded">remove from cart</button>
-					</div>
+					@ProductDetails(product)
 				</div>
 			}
 			<div>total = { strconv.Itoa(totalPrice(products)) }</div>
 		</div>
 	}
+}
+
+templ ProductDetails(product database.OrderItem) {
+	<div
+		class="flex flex-col gap-2 ml-8"
+		id={ "product-" +
+		strconv.Itoa(int(product.ID)) }
+	>
+		<div>{ product.Name }</div>
+		<div class="flex flex-row gap-4">
+			<button
+				class="bg-slate-900 rounded px-4"
+				hx-post={ "/api/cart/decrease/" +
+								strconv.Itoa(int(product.ID)) }
+				hx-target={ "#product-" +
+								strconv.Itoa(int(product.ID)) }
+				hx-swap="outerHTML"
+			>-</button>
+			<div
+				id={ "cart-product-quantity-" + strconv.Itoa(int(product.ID)) }
+			>{ strconv.Itoa(product.Quantity) }</div>
+			<button
+				class="bg-slate-900 rounded px-4"
+				hx-post={ "/api/cart/increase/" +
+								strconv.Itoa(int(product.ID)) }
+				hx-target={ "#product-" +
+								strconv.Itoa(int(product.ID)) }
+				hx-swap="innerHTML"
+			>+</button>
+		</div>
+		<div>$ { strconv.Itoa(product.Price * product.Quantity) }</div>
+		<button class="bg-red-500 text-white py-1 px-2 rounded">remove from cart</button>
+	</div>
 }
