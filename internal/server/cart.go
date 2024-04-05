@@ -119,3 +119,23 @@ func (s *Server) CartDecreaseProductQuantity(c *gin.Context) {
 		return
 	}
 }
+
+func (s *Server) RemoveItemCart(c *gin.Context) {
+	productID, err := strconv.Atoi(c.Param("product_id"))
+	if err != nil {
+		c.String(http.StatusBadRequest, "product id is incorrect")
+		return
+	}
+	userID, err := s.Authenticate(c)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusUnauthorized, "login requried to perform action")
+		return
+	}
+	err = s.db.RemoveCartItem(userID, int64(productID))
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to remove the provided product")
+		return
+	}
+}

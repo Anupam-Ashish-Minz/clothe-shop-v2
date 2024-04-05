@@ -38,24 +38,26 @@ func (s *service) UpdateCartProductCount(userID int64, productID int64, incremen
 	if err != nil {
 		return err
 	}
+	defer tx.Rollback()
 	row := tx.QueryRow(`select quantity from Cart where userId = ? and productId = ?`, userID, productID)
 	var prevQuantity int
 	err = row.Scan(&prevQuantity)
 	if err != nil {
 		return err
 	}
-	if prevQuantity+incrementQuantity == 0 {
+	if prevQuantity+incrementQuantity <= 0 {
 		_, err = tx.Exec(`delete from Cart where userId = ? and productId = ?`, userID, productID)
 		if err != nil {
 			return err
 		}
+		tx.Commit()
 	} else {
-		tx.Exec(`update Cart set quantity = ? where userId = ? and productId = ?`,
+		_, err = tx.Exec(`update Cart set quantity = ? where userId = ? and productId = ?`,
 			prevQuantity+incrementQuantity, userID, productID)
-		err = tx.Commit()
 		if err != nil {
 			return err
 		}
+		err = tx.Commit()
 	}
 	return nil
 }
@@ -71,4 +73,12 @@ func (s *service) GetCartItemById(userID int64, productID int64) (OrderItem, err
 		return OrderItem{}, err
 	}
 	return product, nil
+}
+
+func (s *service) RemoveCartItem(userID int64, productID int64) error {
+	if userID == 0 || productID == 0 {
+		return fmt.Errorf("invalid user id or product id")
+	}
+	_, err := s.db.Exec(`delete from Cart where userId = ? and productId = ?`, userID, productID)
+	return err
 }

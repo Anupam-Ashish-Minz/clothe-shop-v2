@@ -52,10 +52,12 @@ templ ProductDetails(product database.OrderItem) {
 								strconv.Itoa(int(product.ID)) }
 				hx-target={ "#product-" +
 								strconv.Itoa(int(product.ID)) }
-				hx-swap="innerHTML"
+				hx-swap="outerHTML"
 			>+</button>
 		</div>
 		<div>$ { strconv.Itoa(product.Price * product.Quantity) }</div>
-		<button class="bg-red-500 text-white py-1 px-2 rounded">remove from cart</button>
+		<button
+			class="bg-red-500 text-white py-1 px-2 rounded"
+		>remove from cart</button>
 	</div>
 }
