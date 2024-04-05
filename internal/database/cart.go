@@ -45,13 +45,7 @@ func (s *service) UpdateCartProductCount(userID int64, productID int64, incremen
 	if err != nil {
 		return err
 	}
-	if prevQuantity+incrementQuantity <= 0 {
-		_, err = tx.Exec(`delete from Cart where userId = ? and productId = ?`, userID, productID)
-		if err != nil {
-			return err
-		}
-		tx.Commit()
-	} else {
+	if prevQuantity+incrementQuantity > 0 {
 		_, err = tx.Exec(`update Cart set quantity = ? where userId = ? and productId = ?`,
 			prevQuantity+incrementQuantity, userID, productID)
 		if err != nil {
