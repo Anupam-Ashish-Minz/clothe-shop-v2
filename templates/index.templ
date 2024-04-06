@@ -72,13 +72,18 @@ templ Base() {
 			</script>
 		</head>
 		<body>
-			<nav class="flex gap-2 p-2 py-4">
-				<a class="underline" href="/">home</a>
-				<a class="underline" href="/products">products</a>
-				<a class="underline" href="/login">login</a>
-				<a class="underline" href="/signup">signup</a>
-				<a class="underline" href="/cart">cart</a>
-			</nav>
+			<div class="relative" style="height: 3rem; margin-bottom: 5rem;">
+				<nav
+					class="flex gap-2 p-2 py-4 fixed bg-slate-800 w-full
+					border-b"
+				>
+					<a class="underline" href="/">home</a>
+					<a class="underline" href="/products">products</a>
+					<a class="underline" href="/login">login</a>
+					<a class="underline" href="/signup">signup</a>
+					<a class="underline" href="/cart">cart</a>
+				</nav>
+			</div>
 			{ children... }
 		</body>
 	</html>
