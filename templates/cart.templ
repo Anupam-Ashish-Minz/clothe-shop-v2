@@ -5,26 +5,42 @@ import (
 	"strconv"
 )
 
-func totalPrice(products []database.OrderItem) int {
+func totalPrice(products []database.OrderItem) string {
 	total := 0
 	for _, product := range products {
 		total += product.Price * product.Quantity
 	}
-	return total
+	return strconv.Itoa(total)
+}
+
+func productCount(products []database.OrderItem) string {
+	count := 0
+	for _, product := range products {
+		count += product.Quantity
+	}
+	return strconv.Itoa(count)
 }
 
 templ CartContent(products []database.OrderItem) {
-	<div class="flex flex-col gap-4" id="cart-page">
-		for _, product := range products {
-			<div
-				class="flex flex-row items-center"
-				id={ productTarget(product.ID, false) }
-			>
-				<img src={ "/static/images/" + product.Image } alt=""/>
-				@ProductDetails(product)
+	<div class="grid grid-cols-4 m-4" id="cart-page">
+		<div class="flex flex-col gap-4 col-span-3">
+			for _, product := range products {
+				<div
+					class="flex flex-row items-center"
+					id={ productTarget(product.ID, false) }
+				>
+					<img src={ "/static/images/" + product.Image } alt=""/>
+					@ProductDetails(product)
+				</div>
+			}
+		</div>
+		<div class="relative flex justify-center">
+			<div class="fixed flex flex-col p-4 pt-16 pb-16 gap-4 items-start border">
+				<h1 class="font-extrabold text-xl">Subtotal ({ productCount(products) } products)</h1>
+				<div class="font-bold text-lg">$ { totalPrice(products) }</div>
+				<button class="bg-slate-900 rounded px-4">order now</button>
 			</div>
-		}
-		<div class="always-change">total = { strconv.Itoa(totalPrice(products)) }</div>
+		</div>
 	</div>
 }
 
