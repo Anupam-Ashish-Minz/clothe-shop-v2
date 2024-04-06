@@ -84,8 +84,13 @@ func (s *Server) CartIncreaseProductQuantity(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to increamet product count, check if the product is added to the cart")
 		return
 	}
-	product, err := s.db.GetCartItemById(userID, int64(productID))
-	err = templates.ProductDetails(product).Render(context.Background(), c.Writer)
+	products, err := s.db.ProductsInCart(userID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to query data from database")
+		return
+	}
+	err = templates.CartContent(products).Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to render template")
@@ -111,8 +116,13 @@ func (s *Server) CartDecreaseProductQuantity(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to decrement product count, check if the product is count is zero")
 		return
 	}
-	product, err := s.db.GetCartItemById(userID, int64(productID))
-	err = templates.ProductDetails(product).Render(context.Background(), c.Writer)
+	products, err := s.db.ProductsInCart(userID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to query data from database")
+		return
+	}
+	err = templates.CartContent(products).Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to render template")
@@ -136,6 +146,18 @@ func (s *Server) RemoveItemCart(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to remove the provided product")
+		return
+	}
+	products, err := s.db.ProductsInCart(userID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to query data from database")
+		return
+	}
+	err = templates.CartContent(products).Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "unable to render template")
 		return
 	}
 }
