@@ -38,6 +38,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/api/cart/decrease/:product_id", s.CartDecreaseProductQuantity)
 	r.POST("/api/cart/remove/:product_id", s.RemoveItemCart)
 
+	r.GET("/orders", s.OrderPage)
+
 	r.GET("/admin", s.AdminPage)
 
 	r.POST("/admin/product/add", s.AddNewProduct)
@@ -61,5 +63,13 @@ func (s *Server) AdminPage(c *gin.Context) {
 	err := templates.AdminPage().Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)
+	}
+}
+
+func (s *Server) OrderPage(c *gin.Context) {
+	if err := templates.OrderPage().Render(context.Background(), c.Writer); err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to render template")
+		return
 	}
 }
