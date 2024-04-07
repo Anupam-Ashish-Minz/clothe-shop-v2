@@ -22,7 +22,7 @@ func productCount(products []database.OrderItem) string {
 }
 
 templ CartContent(products []database.OrderItem) {
-	<div class="grid grid-cols-4 m-4" id="cart-page">
+	<div class="grid md:grid-cols-4 m-4" id="cart-page">
 		<div class="flex flex-col gap-4 col-span-3">
 			for _, product := range products {
 				<div
@@ -40,7 +40,7 @@ templ CartContent(products []database.OrderItem) {
 			}
 		</div>
 		<div class="relative flex justify-center">
-			<div class="fixed flex flex-col p-4 pt-16 pb-16 gap-4 items-start border">
+			<div class="md:fixed flex flex-col p-4 pt-16 pb-16 gap-4 items-start">
 				<h1 class="font-extrabold text-xl">Subtotal ({ productCount(products) } products)</h1>
 				<div class="font-bold text-lg">$ { totalPrice(products) }</div>
 				<button class="bg-slate-900 rounded px-4">order now</button>
