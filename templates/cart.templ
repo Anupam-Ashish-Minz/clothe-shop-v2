@@ -29,7 +29,12 @@ templ CartContent(products []database.OrderItem) {
 					class="flex flex-row items-center"
 					id={ productTarget(product.ID, false) }
 				>
-					<img src={ "/static/images/" + product.Image } alt=""/>
+					<img
+						src={ "/static/images/" + product.Image }
+						alt=""
+						style="width: 320px; height: 320px;"
+						class="rounded"
+					/>
 					@ProductDetails(product)
 				</div>
 			}
