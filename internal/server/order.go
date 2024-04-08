@@ -28,5 +28,17 @@ func (s *Server) PlaceOrder(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 	}
+	var anyError error = nil
+	for _, product := range products {
+		orderID, err := s.db.NewOrder(userID, product)
+		log.Println(orderID)
+		if err != nil {
+			log.Println(err)
+			anyError = err
+		}
+	}
+	if anyError != nil {
+		c.String(http.StatusInternalServerError, "failed to place certain orders, check arrordingly")
+	}
 	log.Println(products)
 }

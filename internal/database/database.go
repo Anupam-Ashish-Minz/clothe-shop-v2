@@ -28,6 +28,7 @@ type Service interface {
 	GetCartItemById(userID int64, productID int64) (OrderItem, error)
 	RemoveCartItem(userID int64, productID int64) error
 	GetAllProductsInCart(userID int64) ([]OrderItem, error)
+	NewOrder(userID int64, product OrderItem) (int64, error)
 }
 
 type service struct {
