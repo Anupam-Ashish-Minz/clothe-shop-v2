@@ -66,25 +66,3 @@ func (s *Server) AdminPage(c *gin.Context) {
 		log.Println(err)
 	}
 }
-
-func (s *Server) OrderPage(c *gin.Context) {
-	if err := templates.OrderPage().Render(context.Background(), c.Writer); err != nil {
-		log.Println(err)
-		c.String(http.StatusInternalServerError, "failed to render template")
-		return
-	}
-}
-
-func (s *Server) PlaceOrder(c *gin.Context) {
-	userID, err := s.Authenticate(c)
-	if err != nil {
-		log.Println(err)
-		c.String(http.StatusUnauthorized, "login required")
-		return
-	}
-	products, err := s.db.GetAllProductsInCart(userID)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println(products)
-}

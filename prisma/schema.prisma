@@ -18,6 +18,7 @@ model Product {
   gender String
   image String
   carts Cart[]
+  orders Order[]
 }
 
 model User {
@@ -26,6 +27,7 @@ model User {
   email String @unique
   password String 
   carts Cart[]
+  order Order[]
 }
 
 model Cart {
@@ -35,4 +37,21 @@ model Cart {
   user User @relation(fields: [userId], references: [id])
   quantity Int
   @@id([productId, userId])
+}
+
+enum OrderStatus {
+  COMPLETED
+  PENDING
+  CANCLED
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  date DateTime
+  state OrderStatus @default(PENDING)
+  productId Int 
+  product Product @relation(fields: [productId], references: [id])
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  quantity Int
 }
