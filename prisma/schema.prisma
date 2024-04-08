@@ -47,7 +47,7 @@ enum OrderStatus {
 
 model Order {
   id Int @id @default(autoincrement())
-  date DateTime
+  date DateTime @default(now()) @db.Timestamptz(3)
   state OrderStatus @default(PENDING)
   productId Int 
   product Product @relation(fields: [productId], references: [id])
