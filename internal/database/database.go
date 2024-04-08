@@ -27,6 +27,7 @@ type Service interface {
 	UpdateCartProductCount(userID int64, productID int64, increamentQuantity int) error
 	GetCartItemById(userID int64, productID int64) (OrderItem, error)
 	RemoveCartItem(userID int64, productID int64) error
+	GetAllProductsInCart(userID int64) ([]OrderItem, error)
 }
 
 type service struct {

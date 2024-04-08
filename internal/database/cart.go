@@ -76,3 +76,24 @@ func (s *service) RemoveCartItem(userID int64, productID int64) error {
 	_, err := s.db.Exec(`delete from Cart where userId = ? and productId = ?`, userID, productID)
 	return err
 }
+
+func (s *service) GetAllProductsInCart(userID int64) ([]OrderItem, error) {
+	rows, err := s.db.Query(`select productId, p.name, p.description, p.gender,
+		p.price, p.image, quantity from Cart inner join Product as p on productId = p.id
+		where userId = ?`, userID)
+
+	products := make([]OrderItem, 0)
+	for rows.Next() {
+		var product OrderItem
+		err = rows.Scan(&product.ID, &product.Name, &product.Description,
+			&product.Gender, &product.Price, &product.Image, &product.Quantity)
+		products = append(products, product)
+		if err != nil {
+			return []OrderItem{}, err
+		}
+	}
+	if err != nil {
+		return []OrderItem{}, err
+	}
+	return products, nil
+}
