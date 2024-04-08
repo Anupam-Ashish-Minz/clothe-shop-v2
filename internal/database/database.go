@@ -9,7 +9,7 @@ import (
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
 type Service interface {
@@ -39,7 +39,7 @@ var (
 )
 
 func New() Service {
-	db, err := sql.Open("sqlite3", dburl)
+	db, err := sql.Open("postgres", dburl)
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.

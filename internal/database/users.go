@@ -11,7 +11,7 @@ type User struct {
 
 func (s *service) GetUserByEmail(email string) (User, error) {
 	var user User
-	row := s.db.QueryRow(`select id, name, email, password from User where email = ?`, email)
+	row := s.db.QueryRow(`select id, name, email, password from "User" where email = $1`, email)
 	row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if user.ID == 0 || user.Email == "" {
 		return user, fmt.Errorf("user not found")
@@ -23,7 +23,7 @@ func (s *service) AddNewUser(user User) (int64, error) {
 	if user.Name == "" || user.Email == "" || user.Password == "" {
 		return 0, fmt.Errorf("missing fields in user object")
 	}
-	res, err := s.db.Exec(`insert into User (name, email, password) values (?, ?, ?)`,
+	res, err := s.db.Exec(`insert into "User" (name, email, password) values ($1, $2, $3)`,
 		user.Name, user.Email, user.Password)
 	if err != nil {
 		return 0, err
@@ -33,7 +33,7 @@ func (s *service) AddNewUser(user User) (int64, error) {
 
 func (s *service) GetUserById(userID int64) (User, error) {
 	var user User
-	row := s.db.QueryRow(`select id, name, email, password from User where id = ?`, userID)
+	row := s.db.QueryRow(`select id, name, email, password from "User" where id = $1`, userID)
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
 		return user, err

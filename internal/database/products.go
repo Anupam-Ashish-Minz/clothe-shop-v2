@@ -1,6 +1,9 @@
 package database
 
-import "fmt"
+import (
+	"fmt"
+	_ "github.com/lib/pq"
+)
 
 type Product struct {
 	ID          int64
@@ -27,7 +30,7 @@ func (s *service) GetProducts(page int) ([]Product, error) {
 	var p Product
 	rows, err := s.db.Query(
 		`select id, name, description, price, gender, image from 
-		Product limit ? offset ?`,
+		"Product" limit $1 offset $2`,
 		pageSize, page*pageSize,
 	)
 	if err != nil {
@@ -44,7 +47,7 @@ func (s *service) AddProduct(product Product) (int64, error) {
 	if product.Name == "" || product.Price == 0 || product.Gender == "" || product.Image == "" {
 		return 0, fmt.Errorf(fmt.Sprint("empty fields in product struct", product))
 	}
-	res, err := s.db.Exec(`insert into Product (name, price, description, gender, image) values (?, ?, ?, ?, ?)`,
+	res, err := s.db.Exec(`insert into "Product" (name, price, description, gender, image) values ($1, $2, $3, $4, $5)`,
 		product.Name, product.Price, product.Description, product.Gender, product.Image)
 	if err != nil {
 		return 0, err
@@ -54,7 +57,7 @@ func (s *service) AddProduct(product Product) (int64, error) {
 
 func (s *service) GetProductById(productID int64) (Product, error) {
 	var product Product
-	row := s.db.QueryRow(`select id, name, price, description, gender, image from Product where id = ?`, productID)
+	row := s.db.QueryRow(`select id, name, price, description, gender, image from "Product" where id = $1`, productID)
 	row.Scan(&product.ID, &product.Name, &product.Price, &product.Description, &product.Gender, &product.Image)
 	if product.ID == 0 {
 		return product, fmt.Errorf("no such product exists")
@@ -85,7 +88,7 @@ func (s *service) UpdateProduct(product Product) error {
 	if product.Gender == "" {
 		product.Gender = orignalProduct.Gender
 	}
-	s.db.Exec(`update Product set name = ?, description = ?, price = ?, gender = ?, image = ? where id = ?`,
+	s.db.Exec(`update "Product" set name = $1, description = $2, price = $3, gender = $4, image = $5 where id = $6`,
 		product.Name, product.Description, product.Price, product.ID)
 	return fmt.Errorf("not implemented")
 }
@@ -94,8 +97,8 @@ func (s *service) ProductsInCart(userID int64) ([]OrderItem, error) {
 	products := make([]OrderItem, 0)
 	var product OrderItem
 	rows, err := s.db.Query(`select p.id, p.name, p.description, p.price,
-		p.gender, p.image, c.quantity from User as u join Cart as c on u.id =
-		c.userId join Product as p on c.productId = p.id where c.userId = ?`,
+		p.gender, p.image, c.quantity from "User" as u join "Cart" as c on u.id =
+		c."userId" join "Product" as p on c."productId" = p.id where c."userId" = $1`,
 		userID)
 	if err != nil {
 		return products, err
