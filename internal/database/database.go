@@ -30,6 +30,7 @@ type Service interface {
 	GetAllProductsInCart(userID int64) ([]OrderItem, error)
 	NewOrder(userID int64, product OrderItem) (int64, error)
 	CleanCart(userID int64) error
+	GetOrdersFromUser(userID int64) ([]Order, error)
 }
 
 type service struct {

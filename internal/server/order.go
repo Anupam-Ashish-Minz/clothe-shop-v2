@@ -10,11 +10,18 @@ import (
 )
 
 func (s *Server) OrderPage(c *gin.Context) {
-	if err := templates.OrderPage().Render(context.Background(), c.Writer); err != nil {
+	userID, err := s.Authenticate(c)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusUnauthorized, "failed to authenticate user")
+	}
+	orders, err := s.db.GetOrdersFromUser(userID)
+	if err := templates.OrderPage(orders).Render(context.Background(), c.Writer); err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to render template")
 		return
 	}
+	log.Println(orders)
 }
 
 func (s *Server) PlaceOrder(c *gin.Context) {

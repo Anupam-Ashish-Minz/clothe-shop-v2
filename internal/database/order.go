@@ -1,13 +1,25 @@
 package database
 
-import "time"
+import (
+	"log"
+	"time"
+)
+
+type OrderStatus string
+
+const (
+	COMPLETED OrderStatus = "COMPLETED"
+	PENDING   OrderStatus = "PENDING"
+	CANCLED   OrderStatus = "CANCLED"
+)
 
 type Order struct {
 	ID        int64
 	Date      time.Time
-	productID int64
-	userID    int64
-	quantity  int
+	State     OrderStatus
+	ProductID int64
+	UserID    int64
+	Quantity  int
 }
 
 func (s *service) NewOrder(userID int64, product OrderItem) (int64, error) {
@@ -23,6 +35,22 @@ func (s *service) NewOrder(userID int64, product OrderItem) (int64, error) {
 	return orderID, nil
 }
 
-func (s *service) GetAllOrdersFromUser(userID int64) (Order, error) {
-	return Order{}, nil
+func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
+	rows, err := s.db.Query(`select id, date, state, "productId", "userId",
+		qunatity from "Order" where "userId" = $1`, userID)
+	if err != nil {
+		return []Order{}, err
+	}
+
+	var orders []Order
+	for rows.Next() {
+		var order Order
+		err = rows.Scan(&order.ID, &order.Date, &order.State, &order.ProductID,
+			&order.UserID, &order.Quantity)
+		if err != nil {
+			log.Println(err)
+		}
+		orders = append(orders, order)
+	}
+	return orders, nil
 }

@@ -4,7 +4,7 @@ import (
 	"clothe-shop-v2/internal/database"
 )
 
-templ OrderPage(orders database.Order) {
+templ OrderPage(orders []database.Order) {
 	@Base() {
 		<h1>List of Previous orders</h1>
 	}
