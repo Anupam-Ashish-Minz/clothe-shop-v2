@@ -14,6 +14,7 @@ func (s *Server) OrderPage(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusUnauthorized, "failed to authenticate user")
+		return
 	}
 	orders, err := s.db.GetOrdersFromUser(userID)
 	if err := templates.OrderPage(orders).Render(context.Background(), c.Writer); err != nil {
@@ -46,6 +47,7 @@ func (s *Server) PlaceOrder(c *gin.Context) {
 	}
 	if anyError != nil {
 		c.String(http.StatusInternalServerError, "failed to place certain orders, check arrordingly")
+		return
 	}
 	err = s.db.CleanCart(userID)
 	if err != nil {
