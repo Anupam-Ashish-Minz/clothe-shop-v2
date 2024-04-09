@@ -40,5 +40,6 @@ func (s *Server) PlaceOrder(c *gin.Context) {
 	if anyError != nil {
 		c.String(http.StatusInternalServerError, "failed to place certain orders, check arrordingly")
 	}
+	s.db.CleanCart(userID)
 	log.Println(products)
 }

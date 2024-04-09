@@ -97,3 +97,11 @@ func (s *service) GetAllProductsInCart(userID int64) ([]OrderItem, error) {
 	}
 	return products, nil
 }
+
+func (s *service) CleanCart(userID int64) error {
+	_, err := s.db.Exec(`delete from "Cart" where "userId" = $1`, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
