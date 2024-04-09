@@ -73,7 +73,7 @@ func (s *service) RemoveCartItem(userID int64, productID int64) error {
 	if userID == 0 || productID == 0 {
 		return fmt.Errorf("invalid user id or product id")
 	}
-	_, err := s.db.Exec(`delete from "Cart" where userId = $1 and productId = $2`, userID, productID)
+	_, err := s.db.Exec(`delete from "Cart" where "userId" = $1 and "productId" = $2`, userID, productID)
 	return err
 }
 
