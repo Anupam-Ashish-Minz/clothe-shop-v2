@@ -2,10 +2,16 @@ package templates
 
 import (
 	"clothe-shop-v2/internal/database"
+	"strconv"
 )
 
 templ OrderPage(orders []database.Order) {
 	@Base() {
 		<h1>List of Previous orders</h1>
+		for _, order := range orders {
+			<div>
+				<div>{ strconv.Itoa(int(order.ID)) }</div>
+			</div>
+		}
 	}
 }
