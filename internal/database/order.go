@@ -16,10 +16,19 @@ const (
 type Order struct {
 	ID        int64
 	Date      time.Time
-	Status     OrderStatus
+	Status    OrderStatus
 	ProductID int64
 	UserID    int64
 	Quantity  int
+}
+
+type OrderWithProducts struct {
+	ID       int64
+	Date     time.Time
+	Status   OrderStatus
+	Product  Product
+	UserID   int64
+	Quantity int
 }
 
 func (s *service) NewOrder(userID int64, product OrderItem) (int64, error) {
@@ -48,6 +57,22 @@ func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
 			log.Println(err)
 		}
 		orders = append(orders, order)
+	}
+	return orders, nil
+}
+
+func (s *service) GteOrderWithProductsFromUser(userID int64) ([]OrderWithProducts, error) {
+	rows, err := s.db.Query(`select id, date, state, "userId", quantity,
+		"Product".id, "Product".name "Product".description, "Product".gender,
+		"Product".price, "Product".image from "Order" inner join "Product" on
+		"productId" = "Order".id where "userId" = $1`, userID)
+	if err != nil {
+		return []OrderWithProducts{}, err
+	}
+	orders := make([]OrderWithProducts, 0)
+	for rows.Next() {
+		var order OrderWithProducts
+		rows.Scan(&order.ID, &order.Date, &order.Status, &order.UserID, &order)
 	}
 	return orders, nil
 }
