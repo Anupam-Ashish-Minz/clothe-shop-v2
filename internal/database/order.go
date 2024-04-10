@@ -23,13 +23,10 @@ type Order struct {
 }
 
 func (s *service) NewOrder(userID int64, product OrderItem) (int64, error) {
-	res, err := s.db.Exec(`insert into "Order" ("productId", "userId", quantity)
-		values ($1, $2, $3)`, product.ID, userID, product.Quantity)
-	if err != nil {
-		return 0, err
-	}
-	orderID, err := res.LastInsertId()
-	if err != nil {
+	row := s.db.QueryRow(`insert into "Order" ("productId", "userId", quantity)
+		values ($1, $2, $3) returning id`, product.ID, userID, product.Quantity)
+	var orderID int64
+	if err := row.Scan(&orderID); err != nil {
 		return 0, err
 	}
 	return orderID, nil

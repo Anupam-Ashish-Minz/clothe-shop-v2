@@ -54,4 +54,5 @@ func (s *Server) PlaceOrder(c *gin.Context) {
 		log.Println(err)
 		return
 	}
+	c.Redirect(http.StatusSeeOther, "/orders")
 }

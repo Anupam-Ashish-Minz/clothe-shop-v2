@@ -43,7 +43,9 @@ templ CartContent(products []database.OrderItem) {
 			<div class="md:fixed flex flex-col p-4 pt-16 pb-16 gap-4 items-start">
 				<h1 class="font-extrabold text-xl">Subtotal ({ productCount(products) } products)</h1>
 				<div class="font-bold text-lg">$ { totalPrice(products) }</div>
-				<button class="bg-slate-900 rounded px-4">order now</button>
+				<form action="/api/order" method="POST">
+					<button class="bg-slate-900 rounded px-4">order now</button>
+				</form>
 			</div>
 		</div>
 	</div>
