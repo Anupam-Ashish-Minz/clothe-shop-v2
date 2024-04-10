@@ -14,7 +14,7 @@ func pngToJpeg(filename string) string {
 
 templ ProductsPage(products []database.Product) {
 	@Base() {
-		<main class="px-8">
+		<main class="md:px-8">
 			<h1 class="text-xl font-bold underline uppercase my-4">list of products</h1>
 			<div class="flex flex-row flex-wrap gap-4">
 				@Products(products, 1)
@@ -43,7 +43,7 @@ templ Product(product database.Product, page int, last bool) {
 			src={ "/static/images/" + product.Image }
 			alt=""
 			style="width:
-		512px; height: 512px"
+		512px; max-height: 512px"
 			class="rounded"
 		/>
 		<div class="text-lg font-bold">{ product.Name }</div>
