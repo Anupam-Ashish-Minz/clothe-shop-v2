@@ -16,7 +16,7 @@ const (
 type Order struct {
 	ID        int64
 	Date      time.Time
-	State     OrderStatus
+	Status     OrderStatus
 	ProductID int64
 	UserID    int64
 	Quantity  int
@@ -34,7 +34,7 @@ func (s *service) NewOrder(userID int64, product OrderItem) (int64, error) {
 
 func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
 	rows, err := s.db.Query(`select id, date, state, "productId", "userId",
-		qunatity from "Order" where "userId" = $1`, userID)
+		quantity from "Order" where "userId" = $1`, userID)
 	if err != nil {
 		return []Order{}, err
 	}
@@ -42,7 +42,7 @@ func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
 	var orders []Order
 	for rows.Next() {
 		var order Order
-		err = rows.Scan(&order.ID, &order.Date, &order.State, &order.ProductID,
+		err = rows.Scan(&order.ID, &order.Date, &order.Status, &order.ProductID,
 			&order.UserID, &order.Quantity)
 		if err != nil {
 			log.Println(err)

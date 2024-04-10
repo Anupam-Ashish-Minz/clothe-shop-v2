@@ -17,12 +17,16 @@ func (s *Server) OrderPage(c *gin.Context) {
 		return
 	}
 	orders, err := s.db.GetOrdersFromUser(userID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "order query falied")
+		return
+	}
 	if err := templates.OrderPage(orders).Render(context.Background(), c.Writer); err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to render template")
 		return
 	}
-	log.Println(orders)
 }
 
 func (s *Server) PlaceOrder(c *gin.Context) {
