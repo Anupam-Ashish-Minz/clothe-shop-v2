@@ -8,12 +8,25 @@ import (
 templ OrderPage(orders []database.OrderWithProducts) {
 	@Base() {
 		<h1 class="text-xl font-bold underline mb-8 ml-8">List of Previous orders</h1>
-		for _, order := range orders {
-			<div>
-				{ fmt.Sprint(order.ID) }
-				{ fmt.Sprint(order.Date) }
-				{ fmt.Sprint(order.Status) }
-			</div>
-		}
+		<div class="flex flex-col gap-4">
+			for _, order := range orders {
+				<div class="grid grid-cols-2 m-2 gap-2 items-start">
+					<img
+						src={ "/static/images/" + order.Product.Image }
+						alt=""
+						class="rounded"
+					/>
+					<div class="flex flex-col gap-1">
+						<div>{ order.Product.Name }</div>
+						<div>{ fmt.Sprint(order.Date) }</div>
+						<div>id: { fmt.Sprint(order.ID) }</div>
+						<div>quantity: { fmt.Sprint(order.Quantity) }</div>
+						<div>{ fmt.Sprint(order.Status) }</div>
+						<button class="bg-slate-500 rounded py-1 max-w-64">track order</button>
+						<button class="bg-red-500 rounded py-1 max-w-64">cancel order</button>
+					</div>
+				</div>
+			}
+		</div>
 	}
 }

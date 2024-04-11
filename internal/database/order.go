@@ -62,10 +62,10 @@ func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
 }
 
 func (s *service) GetOrderWithProductsFromUser(userID int64) ([]OrderWithProducts, error) {
-	rows, err := s.db.Query(`select "Order".id, date, state, "userId", quantity,
-		"Product".id, "Product".name, "Product".description, "Product".gender,
-		"Product".price, "Product".image from "Order" inner join "Product" on
-		"productId" = "Order".id where "userId" = $1`, userID)
+	rows, err := s.db.Query(`SELECT o.id, o.date, o.state, o."userId",
+		o.quantity, p.id, p.name, p.description, p.gender, p.price, p.image FROM
+		"Order" AS o INNER JOIN "Product" AS p ON o."productId" = p.id WHERE
+		o."userId" = $1 ORDER BY o.date DESC`, userID)
 	if err != nil {
 		return []OrderWithProducts{}, err
 	}
