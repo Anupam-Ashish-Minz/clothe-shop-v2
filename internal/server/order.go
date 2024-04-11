@@ -16,7 +16,8 @@ func (s *Server) OrderPage(c *gin.Context) {
 		c.String(http.StatusUnauthorized, "failed to authenticate user")
 		return
 	}
-	orders, err := s.db.GetOrdersFromUser(userID)
+	// orders, err := s.db.GetOrdersFromUser(userID)
+	orders, err := s.db.GetOrderWithProductsFromUser(userID)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "order query falied")

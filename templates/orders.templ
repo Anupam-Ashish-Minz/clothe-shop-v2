@@ -5,27 +5,15 @@ import (
 	"fmt"
 )
 
-templ OrderPage(orders []database.Order) {
+templ OrderPage(orders []database.OrderWithProducts) {
 	@Base() {
 		<h1 class="text-xl font-bold underline mb-8 ml-8">List of Previous orders</h1>
-		<table class="ml-8">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Date</th>
-					<th>Status</th>
-				</tr>
-			</thead>
-			<tbody>
-				for _, order := range orders {
-					<tr class="odd:bg-slate-600">
-						<td class="border px-4 py-2">{ fmt.Sprint(order.ID) } </td>
-						<td class="border px-4 py-2">{ fmt.Sprint(order.Date) } </td>
-						<td class="border px-4 py-2">{ fmt.Sprint(order.Status) } </td>
-						<td class="border px-4 py-2">{ fmt.Sprint(order.Status) } </td>
-					</tr>
-				}
-			</tbody>
-		</table>
+		for _, order := range orders {
+			<div>
+				{ fmt.Sprint(order.ID) }
+				{ fmt.Sprint(order.Date) }
+				{ fmt.Sprint(order.Status) }
+			</div>
+		}
 	}
 }

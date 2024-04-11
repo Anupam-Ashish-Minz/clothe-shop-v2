@@ -61,9 +61,9 @@ func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
 	return orders, nil
 }
 
-func (s *service) GteOrderWithProductsFromUser(userID int64) ([]OrderWithProducts, error) {
-	rows, err := s.db.Query(`select id, date, state, "userId", quantity,
-		"Product".id, "Product".name "Product".description, "Product".gender,
+func (s *service) GetOrderWithProductsFromUser(userID int64) ([]OrderWithProducts, error) {
+	rows, err := s.db.Query(`select "Order".id, date, state, "userId", quantity,
+		"Product".id, "Product".name, "Product".description, "Product".gender,
 		"Product".price, "Product".image from "Order" inner join "Product" on
 		"productId" = "Order".id where "userId" = $1`, userID)
 	if err != nil {
@@ -72,7 +72,14 @@ func (s *service) GteOrderWithProductsFromUser(userID int64) ([]OrderWithProduct
 	orders := make([]OrderWithProducts, 0)
 	for rows.Next() {
 		var order OrderWithProducts
-		rows.Scan(&order.ID, &order.Date, &order.Status, &order.UserID, &order)
+		err = rows.Scan(&order.ID, &order.Date, &order.Status, &order.UserID,
+			&order.Quantity, &order.Product.ID, &order.Product.Name,
+			&order.Product.Description, &order.Product.Gender,
+			&order.Product.Price, &order.Product.Image)
+		if err != nil {
+			log.Println(err)
+		}
+		orders = append(orders, order)
 	}
 	return orders, nil
 }
