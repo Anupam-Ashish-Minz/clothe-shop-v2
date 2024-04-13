@@ -50,10 +50,6 @@ script chartjsScript() {
 	});
 }
 
-script printToConsole(content string) {
-	console.log(content)
-}
-
 templ AdminPage() {
 	@AdminBase() {
 		<section>
@@ -65,7 +61,11 @@ templ AdminPage() {
 				- total revenue, graph
 				- plus avg, media, with date filters
 			</div>
-			@printToConsole("hello world")
+			<div>
+				<canvas id="myChart"></canvas>
+			</div>
+			<script src="/static/chart.js"></script>
+			@chartjsScript()
 		</section>
 	}
 }

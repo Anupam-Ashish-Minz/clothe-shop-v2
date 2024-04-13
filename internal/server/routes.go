@@ -14,6 +14,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.StaticFile("/static/output.css", "./templates/output.css")
 	r.StaticFile("/static/htmx.min.js", "./static/htmx.min.js")
 	r.StaticFile("/static/alpine.min.js", "./static/alpine.min.js")
+	r.StaticFile("/static/chart.min.js", "./static/chart.min.js")
+	r.StaticFile("/static/chart.js", "./static/chart.js")
 	r.Static("/static/images/", "./data/images")
 
 	r.GET("/", s.HomePage)
