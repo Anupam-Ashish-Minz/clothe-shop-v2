@@ -14,19 +14,58 @@ templ AdminBase() {
 			<title>Document</title>
 		</head>
 		<body>
-			<nav class="flex gap-2 p-2 py-4">
-				<a class="underline" href="/admin">dashboard</a>
-				<a class="underline" href="/admin/products">product management</a>
-				<a class="underline" href="/admin/order">order managemnet</a>
-				<a class="underline" href="/admin/logout">logout</a>
-			</nav>
-			{ children... }
+			<main class="flex flex-row">
+				<nav class="flex flex-col gap-2 p-2 py-4">
+					<a class="underline" href="/admin">dashboard</a>
+					<a class="underline" href="/admin/products">product</a>
+					<a class="underline" href="/admin/order">order</a>
+					<a class="underline" href="/admin/logout">logout</a>
+				</nav>
+				{ children... }
+			</main>
 		</body>
 	</html>
 }
 
+script chartjsScript() {
+	const ctx = document.getElementById('myChart');
+
+	new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+			datasets: [{
+				label: '# of Votes',
+				data: [12, 19, 3, 5, 2, 3],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			}
+		}
+	});
+}
+
+script printToConsole(content string) {
+	console.log(content)
+}
+
 templ AdminPage() {
 	@AdminBase() {
-		<h1>admin page</h1>
+		<section>
+			<h1 class="text-xl font-bold uppercase">Dashboard</h1>
+			<div>
+				- list of orders filtered by date
+				- total orders, graph
+				- plus avg, media, with date filters
+				- total revenue, graph
+				- plus avg, media, with date filters
+			</div>
+			@printToConsole("hello world")
+		</section>
 	}
 }
