@@ -6,7 +6,7 @@ type User struct {
 	ID       int64
 	Name     string
 	Email    string
-	Password string
+	Password []byte
 }
 
 func (s *service) GetUserByEmail(email string) (User, error) {
@@ -20,15 +20,17 @@ func (s *service) GetUserByEmail(email string) (User, error) {
 }
 
 func (s *service) AddNewUser(user User) (int64, error) {
-	if user.Name == "" || user.Email == "" || user.Password == "" {
+	if user.Name == "" || user.Email == "" || user.Password == nil || len(user.Password) == 0 {
 		return 0, fmt.Errorf("missing fields in user object")
 	}
-	res, err := s.db.Exec(`insert into "User" (name, email, password) values ($1, $2, $3)`,
+	row := s.db.QueryRow(`insert into "User" (name, email, password) values ($1, $2, $3) returning id`,
 		user.Name, user.Email, user.Password)
+	var userID int64
+	err := row.Scan(&userID)
 	if err != nil {
 		return 0, err
 	}
-	return res.LastInsertId()
+	return userID, nil
 }
 
 func (s *service) GetUserById(userID int64) (User, error) {

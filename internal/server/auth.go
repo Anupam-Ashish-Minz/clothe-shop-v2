@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func createToken(userID int64, SECRET []byte) (string, error) {
@@ -49,7 +50,7 @@ func (s *Server) UserLogin(c *gin.Context) {
 		c.String(http.StatusBadRequest, "user not found, please check if the email is correct and user is signup before continuing")
 		return
 	}
-	if user.Password != password {
+	if err = bcrypt.CompareHashAndPassword(user.Password, []byte(password)); err != nil {
 		c.String(http.StatusUnauthorized, "incorrect email or password")
 		return
 	}
@@ -66,9 +67,18 @@ func (s *Server) UserSignup(c *gin.Context) {
 	var user database.User
 	user.Name = c.PostForm("name")
 	user.Email = c.PostForm("email")
-	// use bcrypt
-	user.Password = c.PostForm("password")
-	if user.Name == "" || user.Email == "" || user.Password == "" {
+	password := c.PostForm("password")
+	if password == "" {
+		c.String(http.StatusBadRequest, "password is required")
+		return
+	}
+	var err error
+	user.Password, err = bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusBadRequest, "invalid password")
+	}
+	if user.Name == "" || user.Email == "" || user.Password == nil || len(user.Password) == 0 {
 		c.String(http.StatusBadRequest, "missing fields")
 		return
 	}

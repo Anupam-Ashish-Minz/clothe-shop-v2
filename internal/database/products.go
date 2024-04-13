@@ -47,12 +47,14 @@ func (s *service) AddProduct(product Product) (int64, error) {
 	if product.Name == "" || product.Price == 0 || product.Gender == "" || product.Image == "" {
 		return 0, fmt.Errorf(fmt.Sprint("empty fields in product struct", product))
 	}
-	res, err := s.db.Exec(`insert into "Product" (name, price, description, gender, image) values ($1, $2, $3, $4, $5)`,
+	row := s.db.QueryRow(`insert into "Product" (name, price, description, gender, image) values ($1, $2, $3, $4, $5) returning id`,
 		product.Name, product.Price, product.Description, product.Gender, product.Image)
+	var productID int64
+	err := row.Scan(&productID)
 	if err != nil {
 		return 0, err
 	}
-	return res.LastInsertId()
+	return productID, nil
 }
 
 func (s *service) GetProductById(productID int64) (Product, error) {
