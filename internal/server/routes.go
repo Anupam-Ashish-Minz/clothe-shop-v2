@@ -61,10 +61,3 @@ func (s *Server) HomePage(c *gin.Context) {
 func (s *Server) healthHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, s.db.Health())
 }
-
-func (s *Server) AdminPage(c *gin.Context) {
-	err := templates.AdminPage().Render(context.Background(), c.Writer)
-	if err != nil {
-		log.Println(err)
-	}
-}
