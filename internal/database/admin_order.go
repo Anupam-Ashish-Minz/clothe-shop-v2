@@ -16,7 +16,7 @@ const (
 
 func (s *service) GetOrderCount(interval OrderCountLength) ([]OrderCount, error) {
 	rows, err := s.db.Query(`select date::date, count(*) from "Order" where
-		date::date > now() - $1::interval group by date::date`, interval)
+		date::date > now() - $1::interval group by date::date order by date::date`, interval)
 	if err != nil {
 		return []OrderCount{}, err
 	}
