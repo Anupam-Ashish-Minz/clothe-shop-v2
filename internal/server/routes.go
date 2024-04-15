@@ -48,6 +48,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/admin/product/add", s.AddNewProduct)
 	r.POST("/admin/product/update", s.UpdateProduct)
 
+	r.POST("/admin/api/order-count-graph/update", s.ChangeOrderCountGraph)
+
 	return r
 }
 

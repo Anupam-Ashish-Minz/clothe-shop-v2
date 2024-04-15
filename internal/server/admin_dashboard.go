@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Server) AdminPage(c *gin.Context) {
-	orderCountStats, err := s.db.GetOrderCount(database.WEEKLY)
+	orderCountStats, err := s.db.GetOrderCount(database.ORDER_WEEKLY)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to query database")
@@ -32,4 +32,29 @@ func (s *Server) AdminPage(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func (s *Server) ChangeOrderCountGraph(c *gin.Context) {
+	orderCountType := c.PostForm("order-count-duration")
+	log.Println(orderCountType)
+	if orderCountType != string(database.ORDER_WEEKLY) && orderCountType != string(database.ORDER_MONTHLY) {
+		log.Println("the duration of the graph specfied is not valid", orderCountType)
+		c.String(http.StatusBadRequest, "the duration of the graph specfied is not valid")
+		return
+	}
+	orderCountStats, err := s.db.GetOrderCount(database.ORDER_WEEKLY)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to query database")
+		return
+	}
+	orderCount := sharedtypes.Graph{}
+	orderCount.Labels = make([]string, 0)
+	orderCount.Data = make([]int, 0)
+	for _, ord := range orderCountStats {
+		sDate := strings.Split(fmt.Sprint(ord.Date), " ")
+		orderCount.Labels = append(orderCount.Labels, sDate[0])
+		orderCount.Data = append(orderCount.Data, ord.Count)
+	}
+	templates.OrderCountGraph(orderCount).Render(context.Background(), c.Writer)
 }

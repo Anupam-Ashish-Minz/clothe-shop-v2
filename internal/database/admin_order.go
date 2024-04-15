@@ -10,8 +10,8 @@ type OrderCount struct {
 type OrderCountLength string
 
 const (
-	WEEKLY  OrderCountLength = "7 days"
-	MONTHLY OrderCountLength = "30 days"
+	ORDER_WEEKLY  OrderCountLength = "7 days"
+	ORDER_MONTHLY OrderCountLength = "30 days"
 )
 
 func (s *service) GetOrderCount(interval OrderCountLength) ([]OrderCount, error) {

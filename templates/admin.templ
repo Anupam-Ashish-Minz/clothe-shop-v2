@@ -52,8 +52,29 @@ script drawGraph(labels []string, data []int) {
 	});
 }
 
-templ AdminPage(graph sharedtypes.AdminGraphs) {
+templ OrderCountGraph(orderCountGraph sharedtypes.Graph) {
+	<div id="order-count-graph">
+		<select
+			name="order-count-duration"
+			id=""
+			class="text-black"
+			hx-post="/admin/api/order-count-graph/update"
+			hx-target="#order-count-graph"
+			hx-swap="outerHTML"
+		>
+			<option value="7 days">last 7 days</option>
+			<option value="30 days">last 30 days</option>
+		</select>
+		<div>
+			<canvas id="order-count-chart"></canvas>
+		</div>
+		@drawGraph(orderCountGraph.Labels, orderCountGraph.Data)
+	</div>
+}
+
+templ AdminPage(graphs sharedtypes.AdminGraphs) {
 	@AdminBase() {
+		<script src="/static/chart.js"></script>
 		<section>
 			<h1 class="text-xl font-bold uppercase">Dashboard</h1>
 			<div>
@@ -63,11 +84,7 @@ templ AdminPage(graph sharedtypes.AdminGraphs) {
 				- total revenue, graph
 				- plus avg, media, with date filters
 			</div>
-			<div>
-				<canvas id="order-count-chart"></canvas>
-			</div>
-			<script src="/static/chart.js"></script>
-			@drawGraph(graph.OrderCount.Labels, graph.OrderCount.Data)
+			@OrderCountGraph(graphs.OrderCount)
 		</section>
 	}
 }
