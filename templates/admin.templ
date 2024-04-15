@@ -1,6 +1,8 @@
 package templates 
 
-import ()
+import (
+	"clothe-shop-v2/internal/sharedtypes"
+)
 
 templ AdminBase() {
 	<!DOCTYPE html>
@@ -27,16 +29,16 @@ templ AdminBase() {
 	</html>
 }
 
-script chartjsScript() {
-	const ctx = document.getElementById('myChart');
+script drawGraph(labels []string, data []int) {
+	const ctx = document.getElementById('order-count-chart');
 
 	new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+			labels: labels,
 			datasets: [{
-				label: '# of Votes',
-				data: [12, 19, 3, 5, 2, 3],
+				label: '# of Orders',
+				data: data,
 				borderWidth: 1
 			}]
 		},
@@ -50,7 +52,7 @@ script chartjsScript() {
 	});
 }
 
-templ AdminPage() {
+templ AdminPage(graph sharedtypes.AdminGraphs) {
 	@AdminBase() {
 		<section>
 			<h1 class="text-xl font-bold uppercase">Dashboard</h1>
@@ -62,10 +64,10 @@ templ AdminPage() {
 				- plus avg, media, with date filters
 			</div>
 			<div>
-				<canvas id="myChart"></canvas>
+				<canvas id="order-count-chart"></canvas>
 			</div>
 			<script src="/static/chart.js"></script>
-			@chartjsScript()
+			@drawGraph(graph.OrderCount.Labels, graph.OrderCount.Data)
 		</section>
 	}
 }
