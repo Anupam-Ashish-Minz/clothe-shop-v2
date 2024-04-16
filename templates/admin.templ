@@ -29,15 +29,15 @@ templ AdminBase() {
 	</html>
 }
 
-script drawGraph(labels []string, data []int) {
-	const ctx = document.getElementById('order-count-chart');
+script drawGraph(label string, target string, labels []string, data []int) {
+	const ctx = document.getElementById(target);
 
 	new Chart(ctx, {
 		type: 'line',
 		data: {
 			labels: labels,
 			datasets: [{
-				label: '# of Orders',
+				label: label,
 				data: data,
 				borderWidth: 1
 			}]
@@ -53,13 +53,13 @@ script drawGraph(labels []string, data []int) {
 }
 
 templ OrderCountGraph(orderCountGraph sharedtypes.Graph) {
-	<div id="order-count-graph">
+	<div id="order-count-container">
 		<select
 			name="order-count-duration"
 			id=""
 			class="text-black"
 			hx-post="/admin/api/order-count-graph/update"
-			hx-target="#order-count-graph"
+			hx-target="#order-count-container"
 			hx-swap="outerHTML"
 		>
 			<option value="7 days" selected?={ orderCountGraph.Option == "7 days" }>last 7 days</option>
@@ -68,7 +68,27 @@ templ OrderCountGraph(orderCountGraph sharedtypes.Graph) {
 		<div class="canvas-container">
 			<canvas id="order-count-chart"></canvas>
 		</div>
-		@drawGraph(orderCountGraph.Labels, orderCountGraph.Data)
+		@drawGraph("# of Orders", "order-count-chart", orderCountGraph.Labels, orderCountGraph.Data)
+	</div>
+}
+
+templ TotalRevenueGraph(totalRevenuGraph sharedtypes.Graph) {
+	<div id="total-revenue-container">
+		<select
+			name="total-revenue-duration"
+			id=""
+			class="text-black"
+			hx-post="/admin/api/order-count-graph/update"
+			hx-target="#total-revenue-container"
+			hx-swap="outerHTML"
+		>
+			<option value="7 days" selected?={ totalRevenuGraph.Option == "7 days" }>last 7 days</option>
+			<option value="30 days" selected?={ totalRevenuGraph.Option == "30 days" }>last 30 days</option>
+		</select>
+		<div class="canvas-container">
+			<canvas id="total-revenue-chart"></canvas>
+		</div>
+		@drawGraph("# revenue", "total-revenue-chart", totalRevenuGraph.Labels, totalRevenuGraph.Data)
 	</div>
 }
 
@@ -77,8 +97,8 @@ templ AdminPage(graphs sharedtypes.AdminGraphs) {
 		<script src="/static/chart.js"></script>
 		<style>
 .canvas-container {
-	max-width: 728px;
-	max-height: 364px;
+	width: 728px;
+	height: 364px;
 }
 		</style>
 		<section>
@@ -90,7 +110,10 @@ templ AdminPage(graphs sharedtypes.AdminGraphs) {
 				- total revenue, graph
 				- plus avg, media, with date filters
 			</div>
-			@OrderCountGraph(graphs.OrderCount)
+			<div class="flex flex-row gap-1 flex-wrap">
+				@OrderCountGraph(graphs.OrderCount)
+				@TotalRevenueGraph(graphs.OrderCount)
+			</div>
 		</section>
 	}
 }
