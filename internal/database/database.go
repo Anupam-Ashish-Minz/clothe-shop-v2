@@ -34,6 +34,7 @@ type Service interface {
 	GetOrderWithProductsFromUser(userID int64) ([]OrderWithProducts, error)
 	GetOrderCount(interval OrderCountLength) ([]OrderCount, error)
 	GetTotalRevenue(interval OrderCountLength) ([]RevenueAmount, error)
+	GetAllOrders() ([]OrderWithProducts, error)
 }
 
 type service struct {

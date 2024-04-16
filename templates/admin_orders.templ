@@ -1,0 +1,36 @@
+package templates 
+
+import (
+	"clothe-shop-v2/internal/database"
+	"strconv"
+	"fmt"
+)
+
+templ AdminOrders(orders []database.OrderWithProducts) {
+	@AdminBase() {
+		<div>
+			<h1 class="text-xl font-bold underline m-4">List of Orders</h1>
+			<table class="">
+				<tbody>
+					for _, order := range orders {
+						<tr>
+							<td class="px-2 py-1 border">{ strconv.Itoa(int(order.ID)) } </td>
+							<td class="px-2 py-1 border">{ order.Product.Name } </td>
+							<td class="px-2 py-1 border">{ strconv.Itoa(order.Product.Price) } </td>
+							<td class="px-2 py-1 border">{ string(order.Status) } </td>
+							<td class="px-2 py-1 border">{ fmt.Sprint(order.Date) } </td>
+							if order.Status == database.PENDING {
+								<td class="px-2 py-1 border">
+									<button
+										class="px-2 py-1 bg-slate-900 text-white
+									rounded"
+									>delivered</button>
+								</td>
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+}

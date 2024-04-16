@@ -56,3 +56,26 @@ func (s *service) GetTotalRevenue(interval OrderCountLength) ([]RevenueAmount, e
 	}
 	return revenueAmounts, nil
 }
+
+func (s *service) GetAllOrders() ([]OrderWithProducts, error) {
+	rows, err := s.db.Query(`select o.id, date, state, quantity, p.id, p.name,
+		p.price, p.description, p.gender, p.image from "Order" as o inner join
+		"Product" as p on o."productId" = p.id`)
+	if err != nil {
+		return []OrderWithProducts{}, err
+	}
+
+	var orders []OrderWithProducts
+	for rows.Next() {
+		var order OrderWithProducts
+		err = rows.Scan(&order.ID, &order.Date, &order.Status, &order.Quantity,
+			&order.Product.ID, &order.Product.Name, &order.Product.Price,
+			&order.Product.Description, &order.Product.Gender,
+			&order.Product.Image)
+		if err != nil {
+			return orders, err
+		}
+		orders = append(orders, order)
+	}
+	return orders, nil
+}

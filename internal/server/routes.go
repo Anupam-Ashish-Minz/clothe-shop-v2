@@ -50,6 +50,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.POST("/admin/api/order-count-graph/update", s.ChangeOrderCountGraph)
 
+	r.GET("/admin/order", s.AdminOrderPage)
+
 	return r
 }
 
