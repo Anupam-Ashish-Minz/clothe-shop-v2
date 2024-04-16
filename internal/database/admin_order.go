@@ -7,6 +7,11 @@ type OrderCount struct {
 	Count int
 }
 
+type RevenueAmount struct {
+	Date   time.Time
+	Amount int
+}
+
 type OrderCountLength string
 
 const (
@@ -30,4 +35,24 @@ func (s *service) GetOrderCount(interval OrderCountLength) ([]OrderCount, error)
 		orderCounts = append(orderCounts, orderCount)
 	}
 	return orderCounts, nil
+}
+
+func (s *service) GetTotalRevenue(interval OrderCountLength) ([]RevenueAmount, error) {
+	rows, err := s.db.Query(`select date::date, sum(quantity * p.price) from
+		"Order" as o inner join "Product" as p on o."productId" = p.id where
+		date::date > now() - $1::interval group by date::date order by
+		date::date`, interval)
+	if err != nil {
+		return []RevenueAmount{}, err
+	}
+	revenueAmounts := make([]RevenueAmount, 0)
+	for rows.Next() {
+		var revenueAmount RevenueAmount
+		err = rows.Scan(&revenueAmount.Date, &revenueAmount.Amount)
+		if err != nil {
+			return []RevenueAmount{}, err
+		}
+		revenueAmounts = append(revenueAmounts, revenueAmount)
+	}
+	return revenueAmounts, nil
 }

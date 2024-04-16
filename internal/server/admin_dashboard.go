@@ -28,6 +28,16 @@ func (s *Server) AdminPage(c *gin.Context) {
 		graph.OrderCount.Labels = append(graph.OrderCount.Labels, sDate[0])
 		graph.OrderCount.Data = append(graph.OrderCount.Data, ord.Count)
 	}
+
+	revenueStats, err := s.db.GetTotalRevenue(database.ORDER_WEEKLY)
+	graph.RevenueAmount.Labels = make([]string, 0)
+	graph.RevenueAmount.Data = make([]int, 0)
+	for _, rev := range revenueStats {
+		sDate := strings.Split(fmt.Sprint(rev.Date), " ")
+		graph.RevenueAmount.Labels = append(graph.RevenueAmount.Labels, sDate[0])
+		graph.RevenueAmount.Data = append(graph.RevenueAmount.Data, rev.Amount)
+	}
+
 	err = templates.AdminPage(graph).Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)

@@ -7,5 +7,6 @@ type Graph struct {
 }
 
 type AdminGraphs struct {
-	OrderCount Graph
+	OrderCount    Graph
+	RevenueAmount Graph
 }
