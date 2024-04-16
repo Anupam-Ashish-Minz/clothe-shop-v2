@@ -62,10 +62,10 @@ templ OrderCountGraph(orderCountGraph sharedtypes.Graph) {
 			hx-target="#order-count-graph"
 			hx-swap="outerHTML"
 		>
-			<option value="7 days">last 7 days</option>
-			<option value="30 days">last 30 days</option>
+			<option value="7 days" selected?={ orderCountGraph.Option == "7 days" }>last 7 days</option>
+			<option value="30 days" selected?={ orderCountGraph.Option == "30 days" }>last 30 days</option>
 		</select>
-		<div>
+		<div class="canvas-container">
 			<canvas id="order-count-chart"></canvas>
 		</div>
 		@drawGraph(orderCountGraph.Labels, orderCountGraph.Data)
@@ -75,6 +75,12 @@ templ OrderCountGraph(orderCountGraph sharedtypes.Graph) {
 templ AdminPage(graphs sharedtypes.AdminGraphs) {
 	@AdminBase() {
 		<script src="/static/chart.js"></script>
+		<style>
+.canvas-container {
+	max-width: 728px;
+	max-height: 364px;
+}
+		</style>
 		<section>
 			<h1 class="text-xl font-bold uppercase">Dashboard</h1>
 			<div>
