@@ -10,27 +10,50 @@ templ AdminOrders(orders []database.OrderWithProducts) {
 	@AdminBase() {
 		<div>
 			<h1 class="text-xl font-bold underline m-4">List of Orders</h1>
-			<table class="">
-				<tbody>
-					for _, order := range orders {
-						<tr>
-							<td class="px-2 py-1 border">{ strconv.Itoa(int(order.ID)) } </td>
-							<td class="px-2 py-1 border">{ order.Product.Name } </td>
-							<td class="px-2 py-1 border">{ strconv.Itoa(order.Product.Price) } </td>
-							<td class="px-2 py-1 border">{ string(order.Status) } </td>
-							<td class="px-2 py-1 border">{ fmt.Sprint(order.Date) } </td>
-							if order.Status == database.PENDING {
-								<td class="px-2 py-1 border">
-									<button
-										class="px-2 py-1 bg-slate-900 text-white
-									rounded"
-									>delivered</button>
-								</td>
-							}
-						</tr>
-					}
+			<table class="border p-4">
+				<thead class="border">
+					<th class="p-4">ID</th>
+					<th class="p-4">Date Time</th>
+					<th class="p-4">Product Name</th>
+					<th class="p-4">Product Price</th>
+					<th class="p-4">Product Quantity</th>
+					<th class="p-4">Total Amount</th>
+					<th class="p-4">Order Status</th>
+				</thead>
+				<tbody class="">
+					@orderListInTable(orders)
 				</tbody>
 			</table>
 		</div>
+	}
+}
+
+templ orderListInTable(orders []database.OrderWithProducts) {
+	for _, order := range orders {
+		<tr>
+			<td class="p-4">{ strconv.Itoa(int(order.ID)) } </td>
+			<td class="p-4">{ fmt.Sprint(order.Date) } </td>
+			<td class="p-4">{ order.Product.Name } </td>
+			<td class="p-4">{ strconv.Itoa(order.Product.Price) } </td>
+			<td class="p-4">{ strconv.Itoa(order.Quantity) } </td>
+			<td class="p-4">{ strconv.Itoa(order.Product.Price * order.Quantity) } </td>
+			<td class="p-4">
+				@orderCell(order)
+			</td>
+		</tr>
+	}
+}
+
+templ orderCell(order database.OrderWithProducts) {
+	if order.Status == database.PENDING {
+		{ string(order.Status) }
+		<br/>
+		<button
+			class="px-2 py-1 bg-orange-400
+										text-black uppercase rounded"
+			hx-post={ "/admin/api/order/change_order_status/" + strconv.Itoa(int(order.ID)) + "/out_for_delivery" }
+		>out for delivery</button>
+	} else {
+		{ string(order.Status) }
 	}
 }
