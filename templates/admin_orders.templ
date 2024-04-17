@@ -37,7 +37,7 @@ templ orderListInTable(orders []database.OrderWithProducts) {
 			<td class="p-4">{ strconv.Itoa(order.Product.Price) } </td>
 			<td class="p-4">{ strconv.Itoa(order.Quantity) } </td>
 			<td class="p-4">{ strconv.Itoa(order.Product.Price * order.Quantity) } </td>
-			<td class="p-4">
+			<td class="p-4" id={ "order-cell-" + strconv.Itoa(int(order.ID)) }>
 				@orderCell(order)
 			</td>
 		</tr>
@@ -49,9 +49,11 @@ templ orderCell(order database.OrderWithProducts) {
 		{ string(order.Status) }
 		<br/>
 		<button
-			class="px-2 py-1 bg-orange-400
-										text-black uppercase rounded"
-			hx-post={ "/admin/api/order/change_order_status/" + strconv.Itoa(int(order.ID)) + "/out_for_delivery" }
+			class="px-2 py-1 bg-orange-400 text-black uppercase rounded"
+			hx-post={ "/admin/api/order/change_order_status/" +
+			strconv.Itoa(int(order.ID)) + "/" + string(database.COMPLETED) }
+			hx-target={ "#order-cell-" + strconv.Itoa(int(order.ID)) }
+			hx-swap="innerHTML"
 		>out for delivery</button>
 	} else {
 		{ string(order.Status) }

@@ -79,3 +79,11 @@ func (s *service) GetAllOrders() ([]OrderWithProducts, error) {
 	}
 	return orders, nil
 }
+
+func (s *service) ChangeOrderStatus(orderID int64, orderStatus OrderStatus) error {
+	_, err := s.db.Exec(`update "Order" set state = $1 where id = $2`, orderStatus, orderID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
