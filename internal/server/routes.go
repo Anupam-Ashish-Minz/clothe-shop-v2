@@ -52,6 +52,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/admin/order", s.AdminOrderPage)
 
+	r.GET("/admin/products", s.AdminProductPage)
+
 	return r
 }
 

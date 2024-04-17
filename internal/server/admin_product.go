@@ -2,6 +2,8 @@ package server
 
 import (
 	"clothe-shop-v2/internal/database"
+	"clothe-shop-v2/templates"
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -93,4 +95,13 @@ func (s *Server) UpdateProduct(c *gin.Context) {
 		return
 	}
 	// templates.Product(product).Render(context.Background(), c.Writer)
+}
+
+func (s *Server) AdminProductPage(c *gin.Context) {
+	err := templates.AdminProductPage().Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to parse the template")
+		return
+	}
 }
