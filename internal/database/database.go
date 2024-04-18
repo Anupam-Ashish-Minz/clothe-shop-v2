@@ -36,6 +36,7 @@ type Service interface {
 	GetTotalRevenue(interval OrderCountLength) ([]RevenueAmount, error)
 	GetAllOrders() ([]OrderWithProducts, error)
 	ChangeOrderStatus(orderID int64, orderStatus OrderStatus) error
+	GetAllProducts() ([]Product, error)
 }
 
 type service struct {

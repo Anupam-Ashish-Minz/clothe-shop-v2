@@ -98,7 +98,13 @@ func (s *Server) UpdateProduct(c *gin.Context) {
 }
 
 func (s *Server) AdminProductPage(c *gin.Context) {
-	err := templates.AdminProductPage().Render(context.Background(), c.Writer)
+	products, err := s.db.GetAllProducts()
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to fetch products")
+		return
+	}
+	err = templates.AdminProductPage(products).Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to parse the template")

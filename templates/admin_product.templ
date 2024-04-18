@@ -1,9 +1,28 @@
 package templates 
 
-templ AdminProductPage() {
+import (
+	"clothe-shop-v2/internal/database"
+	"strconv"
+)
+
+templ AdminProductPage(products []database.Product) {
 	@AdminBase() {
 		<div>
 			<h1>Admin product page</h1>
+			- list of products
+			- unlist products
+			- add new products
+			- edit products details
+			<div>
+				for _, product := range products {
+					<div class="flex gap-2">
+						<div>{ strconv.Itoa(int(product.ID)) }</div>
+						<div>{ product.Name }</div>
+						<div>{ strconv.Itoa(product.Price) }</div>
+						<div>orders related to that given product</div>
+					</div>
+				}
+			</div>
 		</div>
 	}
 }
