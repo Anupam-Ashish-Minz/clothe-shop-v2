@@ -45,13 +45,13 @@ templ orderListInTable(orders []database.OrderWithProducts) {
 }
 
 templ orderCell(order database.OrderWithProducts) {
-	if order.Status == database.PENDING {
+	if order.Status == database.STATUS_DELIVERED {
 		{ string(order.Status) }
 		<br/>
 		<button
 			class="px-2 py-1 bg-orange-400 text-black uppercase rounded"
 			hx-post={ "/admin/api/order/change_order_status/" +
-			strconv.Itoa(int(order.ID)) + "/" + string(database.COMPLETED) }
+			strconv.Itoa(int(order.ID)) + "/" + string(database.STATUS_DELIVERED) }
 			hx-target={ "#order-cell-" + strconv.Itoa(int(order.ID)) }
 			hx-swap="innerHTML"
 		>out for delivery</button>

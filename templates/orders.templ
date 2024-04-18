@@ -22,7 +22,7 @@ templ OrderPage(orders []database.OrderWithProducts) {
 						<div>id: { fmt.Sprint(order.ID) }</div>
 						<div>quantity: { fmt.Sprint(order.Quantity) }</div>
 						<div>{ fmt.Sprint(order.Status) }</div>
-						if order.Status == database.PENDING {
+						if order.Status == database.STATUS_DELIVERED {
 							<button class="bg-slate-500 rounded py-1 max-w-64">track order</button>
 							<button class="bg-red-500 rounded py-1 max-w-64">cancel order</button>
 						}

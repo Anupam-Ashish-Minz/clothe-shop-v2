@@ -29,7 +29,7 @@ func (s *Server) AdminChangeOrderStatus(c *gin.Context) {
 		return
 	}
 	orderStatus := c.Param("order_status")
-	if orderStatus != string(database.COMPLETED) && orderStatus != string(database.CANCLED) {
+	if orderStatus != string(database.STATUS_DELIVERED) && orderStatus != string(database.STATUS_CANCLED) {
 		log.Println("invalid order status")
 		c.String(http.StatusBadRequest, "invaild order status")
 		return

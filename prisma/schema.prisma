@@ -40,15 +40,16 @@ model Cart {
 }
 
 enum OrderStatus {
-  COMPLETED
-  PENDING
+  DELIVERED
+  PROCESSING
   CANCLED
+  OUT_FOR_DELIVERY
 }
 
 model Order {
   id Int @id @default(autoincrement())
   date DateTime @default(now()) @db.Timestamptz(3)
-  state OrderStatus @default(PENDING)
+  state OrderStatus @default(PROCESSING)
   productId Int 
   product Product @relation(fields: [productId], references: [id])
   userId Int
