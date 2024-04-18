@@ -45,16 +45,26 @@ templ orderListInTable(orders []database.OrderWithProducts) {
 }
 
 templ orderCell(order database.OrderWithProducts) {
-	if order.Status == database.STATUS_DELIVERED {
+	if order.Status == database.STATUS_PROCESSING {
 		{ string(order.Status) }
 		<br/>
 		<button
 			class="px-2 py-1 bg-orange-400 text-black uppercase rounded"
 			hx-post={ "/admin/api/order/change_order_status/" +
-			strconv.Itoa(int(order.ID)) + "/" + string(database.STATUS_DELIVERED) }
+			strconv.Itoa(int(order.ID)) + "/" + string(database.STATUS_OUT_FOR_DELIVERY) }
 			hx-target={ "#order-cell-" + strconv.Itoa(int(order.ID)) }
 			hx-swap="innerHTML"
 		>out for delivery</button>
+	} else if order.Status == database.STATUS_OUT_FOR_DELIVERY {
+		{ string(order.Status) }
+		<br/>
+		<button
+			class="px-2 py-1 bg-blue-400 text-black uppercase rounded"
+			hx-post={ "/admin/api/order/change_order_status/" +
+			strconv.Itoa(int(order.ID)) + "/" + string(database.STATUS_DELIVERED) }
+			hx-target={ "#order-cell-" + strconv.Itoa(int(order.ID)) }
+			hx-swap="innerHTML"
+		>delivered</button>
 	} else {
 		{ string(order.Status) }
 	}
