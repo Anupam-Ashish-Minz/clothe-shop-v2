@@ -14,14 +14,25 @@ templ AdminProductPage(products []database.Product) {
 			- add new products
 			- edit products details
 			<div>
-				for _, product := range products {
-					<div class="flex gap-2">
-						<div>{ strconv.Itoa(int(product.ID)) }</div>
-						<div>{ product.Name }</div>
-						<div>{ strconv.Itoa(product.Price) }</div>
-						<div>orders related to that given product</div>
-					</div>
-				}
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Product Name</th>
+							<th>Price</th>
+						</tr>
+					</thead>
+					<tbody>
+						for _, product := range products {
+							<tr>
+								<td class="border px-2">{ strconv.Itoa(int(product.ID)) }</td>
+								<td class="border px-2">{ product.Name }</td>
+								<td class="border px-2">{ strconv.Itoa(product.Price) }</td>
+								<td class="border px-2">orders related to that given product</td>
+							</tr>
+						}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	}
