@@ -111,3 +111,11 @@ func (s *Server) AdminProductPage(c *gin.Context) {
 		return
 	}
 }
+
+func (s *Server) AdminNewProductPage(c *gin.Context) {
+	err := templates.AdminAddProductPage().Render(context.Background(), c.Writer)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "failed to parse the template")
+	}
+}

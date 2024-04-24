@@ -54,6 +54,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/admin/api/order/change_order_status/:order_id/:order_status", s.AdminChangeOrderStatus)
 
 	r.GET("/admin/products", s.AdminProductPage)
+	r.GET("/admin/products/add", s.AdminNewProductPage)
 
 	return r
 }

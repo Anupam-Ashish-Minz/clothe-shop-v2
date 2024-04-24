@@ -14,6 +14,7 @@ templ AdminProductPage(products []database.Product) {
 			- add new products
 			- edit products details
 			<div>
+				<a class="bg-blue-300 text-white rounded px-2 py-1 uppercase" href="/admin/products/add">add new product</a>
 				<table>
 					<thead>
 						<tr>
@@ -35,5 +36,36 @@ templ AdminProductPage(products []database.Product) {
 				</table>
 			</div>
 		</div>
+	}
+}
+
+templ AdminAddProductPage() {
+	@AdminBase() {
+		<form action="/admin/product/add" class="flex flex-col gap-2 m-4 p-4 rounded">
+			<input
+				type="text"
+				name="name"
+				class="bg-black text-white rounded p-2"
+				placeholder="name"
+			/>
+			<textarea
+				name="description"
+				placeholder="description"
+				class="bg-black text-white rounded p-2"
+			></textarea>
+			<input
+				type="number"
+				name="price"
+				min="1"
+				class="bg-black text-white rounded p-2"
+				placeholder="price"
+			/>
+			<select name="gender" class="bg-black text-white rounded p-2">
+				<option value="male">male</option>
+				<option value="female">female</option>
+			</select>
+			<button class="bg-blue-500 text-white rounded p-2">add product</button>
+			<button type="button" onclick="location.href='/admin/products'">cancel</button>
+		</form>
 	}
 }
