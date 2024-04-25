@@ -6,39 +6,35 @@ import (
 )
 
 type Product struct {
-	ID          int64
-	Name        string
-	Description string
-	Gender      string
-	Price       int
-	Image       string
+	ID          int64  `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
+	Gender      string `db:"gender"`
+	Price       int    `db:"price"`
+	Image       string `db:"image"`
 }
 
 type OrderItem struct {
-	ID          int64
-	Name        string
-	Description string
-	Price       int
-	Gender      string
-	Image       string
-	Quantity    int
+	ID          int64  `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
+	Price       int    `db:"price"`
+	Gender      string `db:"gender"`
+	Image       string `db:"image"`
+	Quantity    int    `db:"quantity"`
 }
 
 func (s *service) GetProducts(page int) ([]Product, error) {
 	pageSize := 10
-	products := make([]Product, 0)
-	var p Product
-	rows, err := s.db.Query(
+	var products []Product
+	err := s.db.Select(
+		&products,
 		`select id, name, description, price, gender, image from 
 		"Product" limit $1 offset $2`,
 		pageSize, page*pageSize,
 	)
 	if err != nil {
 		return products, err
-	}
-	for rows.Next() {
-		rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Gender, &p.Image)
-		products = append(products, p)
 	}
 	return products, nil
 }
@@ -59,8 +55,10 @@ func (s *service) AddProduct(product Product) (int64, error) {
 
 func (s *service) GetProductById(productID int64) (Product, error) {
 	var product Product
-	row := s.db.QueryRow(`select id, name, price, description, gender, image from "Product" where id = $1`, productID)
-	row.Scan(&product.ID, &product.Name, &product.Price, &product.Description, &product.Gender, &product.Image)
+	err := s.db.Get(&product, `select id, name, price, description, gender, image from "Product" where id = $1`, productID)
+	if err != nil {
+		return Product{}, err
+	}
 	if product.ID == 0 {
 		return product, fmt.Errorf("no such product exists")
 	}
@@ -96,18 +94,13 @@ func (s *service) UpdateProduct(product Product) error {
 }
 
 func (s *service) ProductsInCart(userID int64) ([]OrderItem, error) {
-	products := make([]OrderItem, 0)
-	var product OrderItem
-	rows, err := s.db.Query(`select p.id, p.name, p.description, p.price,
+	var products []OrderItem
+	err := s.db.Select(&products, `select p.id, p.name, p.description, p.price,
 		p.gender, p.image, c.quantity from "User" as u join "Cart" as c on u.id =
 		c."userId" join "Product" as p on c."productId" = p.id where c."userId" = $1`,
 		userID)
 	if err != nil {
 		return products, err
-	}
-	for rows.Next() {
-		rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Gender, &product.Image, &product.Quantity)
-		products = append(products, product)
 	}
 	return products, nil
 }
