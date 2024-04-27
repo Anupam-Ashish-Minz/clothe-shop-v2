@@ -1,7 +1,6 @@
 package database
 
 import (
-	"log"
 	"time"
 )
 
@@ -15,72 +14,54 @@ const (
 )
 
 type Order struct {
-	ID        int64
-	Date      time.Time
-	Status    OrderStatus
-	ProductID int64
-	UserID    int64
-	Quantity  int
+	ID        int64       `db:"id"`
+	Date      time.Time   `db:"date"`
+	Status    OrderStatus `db:"status"`
+	ProductID int64       `db:"productId"`
+	UserID    int64       `db:"userId"`
+	Quantity  int         `db:"quantity"`
 }
 
 type OrderWithProducts struct {
-	ID       int64
-	Date     time.Time
-	Status   OrderStatus
-	Product  Product
-	UserID   int64
-	Quantity int
+	ID       int64       `db:"id"`
+	Date     time.Time   `db:"date"`
+	Status   OrderStatus `db:"status"`
+	Product  Product     `db:"product"`
+	UserID   int64       `db:"userId"`
+	Quantity int         `db:"quantity"`
 }
 
 func (s *service) NewOrder(userID int64, product OrderItem) (int64, error) {
-	row := s.db.QueryRow(`insert into "Order" ("productId", "userId", quantity)
-		values ($1, $2, $3) returning id`, product.ID, userID, product.Quantity)
 	var orderID int64
-	if err := row.Scan(&orderID); err != nil {
+	err := s.db.Get(&orderID, `insert into "Order" ("productId", "userId", quantity)
+		values ($1, $2, $3) returning id`, product.ID, userID, product.Quantity)
+	if err != nil {
 		return 0, err
 	}
 	return orderID, nil
 }
 
 func (s *service) GetOrdersFromUser(userID int64) ([]Order, error) {
-	rows, err := s.db.Query(`select id, date, state, "productId", "userId",
+	var orders []Order
+	err := s.db.Select(&orders, `select id, date, state as "status", "productId", "userId",
 		quantity from "Order" where "userId" = $1`, userID)
 	if err != nil {
 		return []Order{}, err
-	}
-
-	var orders []Order
-	for rows.Next() {
-		var order Order
-		err = rows.Scan(&order.ID, &order.Date, &order.Status, &order.ProductID,
-			&order.UserID, &order.Quantity)
-		if err != nil {
-			log.Println(err)
-		}
-		orders = append(orders, order)
 	}
 	return orders, nil
 }
 
 func (s *service) GetOrderWithProductsFromUser(userID int64) ([]OrderWithProducts, error) {
-	rows, err := s.db.Query(`SELECT o.id, o.date, o.state, o."userId",
-		o.quantity, p.id, p.name, p.description, p.gender, p.price, p.image FROM
-		"Order" AS o INNER JOIN "Product" AS p ON o."productId" = p.id WHERE
-		o."userId" = $1 ORDER BY o.date DESC`, userID)
+	var orders []OrderWithProducts
+	err := s.db.Select(&orders, `SELECT o.id, o.date, o.state as "status", o."userId",
+		o.quantity, p.id as "product.id", p.name as "product.name",
+		p.description as "product.description", p.gender as "product.gender",
+		p.price as "product.price", p.image as "product.image" FROM "Order" AS o
+	INNER JOIN "Product" AS p ON o."productId" = p.id WHERE o."userId" = $1
+	ORDER BY o.date DESC`, userID)
+
 	if err != nil {
 		return []OrderWithProducts{}, err
-	}
-	orders := make([]OrderWithProducts, 0)
-	for rows.Next() {
-		var order OrderWithProducts
-		err = rows.Scan(&order.ID, &order.Date, &order.Status, &order.UserID,
-			&order.Quantity, &order.Product.ID, &order.Product.Name,
-			&order.Product.Description, &order.Product.Gender,
-			&order.Product.Price, &order.Product.Image)
-		if err != nil {
-			log.Println(err)
-		}
-		orders = append(orders, order)
 	}
 	return orders, nil
 }
