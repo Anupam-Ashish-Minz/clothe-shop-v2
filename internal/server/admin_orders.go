@@ -22,7 +22,8 @@ func (s *Server) AdminOrderPage(c *gin.Context) {
 }
 
 func (s *Server) AdminChangeOrderStatus(c *gin.Context) {
-	orderID, err := strconv.Atoi(c.Param("order_id"))
+	i32orderID, err := strconv.Atoi(c.Param("order_id"))
+	orderID := int64(i32orderID)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusBadRequest, "invalid order id")
@@ -42,5 +43,22 @@ func (s *Server) AdminChangeOrderStatus(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to process the database query")
 		return
 	}
-	c.String(http.StatusOK, orderStatus)
+
+	order, err := s.db.GetOrderByID(orderID)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "unable to find the order")
+		return
+	}
+	orderWithProducts := database.OrderWithProducts{
+		ID:   order.ID,
+		Date: order.Date,
+	}
+	err = templates.OrderStatusCell().Render(context.Background(), c.Writer)
+
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusInternalServerError, "unable to render order template")
+		return
+	}
 }

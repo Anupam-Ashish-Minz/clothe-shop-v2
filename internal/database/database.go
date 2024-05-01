@@ -35,6 +35,7 @@ type Service interface {
 	GetOrderCount(interval OrderCountLength) ([]OrderCount, error)
 	GetTotalRevenue(interval OrderCountLength) ([]RevenueAmount, error)
 	GetAllOrders() ([]OrderWithProducts, error)
+	GetOrderByID(orderID int64) (Order, error)
 	ChangeOrderStatus(orderID int64, orderStatus OrderStatus) error
 	GetAllProducts() ([]Product, error)
 }

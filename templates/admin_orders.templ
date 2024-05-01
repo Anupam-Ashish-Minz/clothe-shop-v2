@@ -38,13 +38,13 @@ templ orderListInTable(orders []database.OrderWithProducts) {
 			<td class="p-4">{ strconv.Itoa(order.Quantity) } </td>
 			<td class="p-4">{ strconv.Itoa(order.Product.Price * order.Quantity) } </td>
 			<td class="p-4" id={ "order-cell-" + strconv.Itoa(int(order.ID)) }>
-				@orderCell(order)
+				@OrderStatusCell(order)
 			</td>
 		</tr>
 	}
 }
 
-templ orderCell(order database.OrderWithProducts) {
+templ OrderStatusCell(order database.OrderWithProducts) {
 	if order.Status == database.STATUS_PROCESSING {
 		{ string(order.Status) }
 		<br/>

@@ -1,6 +1,9 @@
 package database
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 type OrderCount struct {
 	Date  time.Time
@@ -86,4 +89,15 @@ func (s *service) ChangeOrderStatus(orderID int64, orderStatus OrderStatus) erro
 		return err
 	}
 	return nil
+}
+
+func (s *service) GetOrderByID(orderID int64) (Order, error) {
+	var order Order
+	err := s.db.Get(`select id, date, status, "productId", "userId", quantity
+		from "Order" where id = $1`, strconv.Itoa(int(orderID)))
+
+	if err != nil {
+		return Order{}, err
+	}
+	return order, nil
 }
