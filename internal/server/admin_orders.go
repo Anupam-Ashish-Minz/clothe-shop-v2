@@ -54,7 +54,7 @@ func (s *Server) AdminChangeOrderStatus(c *gin.Context) {
 		ID:   order.ID,
 		Date: order.Date,
 	}
-	err = templates.OrderStatusCell().Render(context.Background(), c.Writer)
+	err = templates.OrderStatusCell(orderWithProducts).Render(context.Background(), c.Writer)
 
 	if err != nil {
 		log.Println(err)
