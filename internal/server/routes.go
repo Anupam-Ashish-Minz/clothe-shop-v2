@@ -41,7 +41,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.DELETE("/cart/:product_id", s.RemoveItemCart)
 
 	r.GET("/orders", s.OrderPage)
-	r.POST("/api/order", s.PlaceOrder)
+	r.POST("/order", s.PlaceOrder)
 
 	r.GET("/admin", s.AdminPage)
 
