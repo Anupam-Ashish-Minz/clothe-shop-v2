@@ -95,7 +95,7 @@ templ ProductDetails(product database.OrderItem) {
 		<div class="flex flex-row gap-4">
 			<button
 				class="bg-slate-900 rounded px-4"
-				hx-post={ "/api/cart/decrease/" +
+				hx-post={ "/cart/decrease/" +
 								strconv.Itoa(int(product.ID)) }
 				hx-target="#cart-page"
 				hx-swap="outerHTML"
@@ -105,7 +105,7 @@ templ ProductDetails(product database.OrderItem) {
 			>{ strconv.Itoa(product.Quantity) }</div>
 			<button
 				class="bg-slate-900 rounded px-4"
-				hx-post={ "/api/cart/increase/" +
+				hx-post={ "/cart/increase/" +
 								strconv.Itoa(int(product.ID)) }
 				hx-target="#cart-page"
 				hx-swap="outerHTML"
@@ -114,7 +114,7 @@ templ ProductDetails(product database.OrderItem) {
 		<div>$ { strconv.Itoa(product.Price * product.Quantity) }</div>
 		<button
 			class="bg-red-500 text-white py-1 px-2 rounded"
-			hx-post={ "/api/cart/remove/" + strconv.Itoa(int(product.ID)) }
+			hx-delete={ "/cart/" + strconv.Itoa(int(product.ID)) }
 			hx-swap="outerHTML"
 			hx-target="#cart-page"
 		>remove from cart</button>

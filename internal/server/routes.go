@@ -35,10 +35,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/product/:id", s.ProductPage)
 
 	r.GET("/cart", s.CartPage)
-	r.POST("/api/cart/add/", s.AddToCart)
-	r.POST("/api/cart/increase/:product_id", s.CartIncreaseProductQuantity)
-	r.POST("/api/cart/decrease/:product_id", s.CartDecreaseProductQuantity)
-	r.POST("/api/cart/remove/:product_id", s.RemoveItemCart)
+	r.POST("/cart", s.AddToCart)
+	r.POST("/cart/increase/:product_id", s.CartIncreaseProductQuantity)
+	r.POST("/cart/decrease/:product_id", s.CartDecreaseProductQuantity)
+	r.DELETE("/cart/:product_id", s.RemoveItemCart)
 
 	r.GET("/orders", s.OrderPage)
 	r.POST("/api/order", s.PlaceOrder)
