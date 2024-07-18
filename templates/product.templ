@@ -34,7 +34,7 @@ templ Product(product database.Product, page int, last bool) {
 	<div
 		class="mb-8 flex flex-col gap-2 p-4"
 		if last {
-			hx-get={ "/api/products?page=" + strconv.Itoa(page) }
+			hx-get={ "/products?page=" + strconv.Itoa(page) }
 			hx-trigger="revealed"
 			hx-swap="afterend"
 		}

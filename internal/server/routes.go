@@ -31,7 +31,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/signup", s.UserSignup)
 
 	r.GET("/products", s.ProductsPage)
-	r.GET("/api/products/", s.FetchProducts)
 	r.GET("/product/:id", s.ProductPage)
 
 	r.GET("/cart", s.CartPage)

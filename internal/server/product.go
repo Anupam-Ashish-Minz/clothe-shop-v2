@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) FetchProducts(c *gin.Context) {
+func (s *Server) ProductsPage(c *gin.Context) {
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil {
 		log.Println(err)
@@ -26,29 +26,19 @@ func (s *Server) FetchProducts(c *gin.Context) {
 		c.String(http.StatusBadRequest, "there are no products in this page")
 		return
 	}
-	err = templates.Products(products, page+1).Render(context.Background(), c.Writer)
-	if err != nil {
-		log.Println(err)
-		c.String(http.StatusInternalServerError, "failed to load products")
-		return
-	}
-}
-
-func (s *Server) ProductsPage(c *gin.Context) {
-	products, err := s.db.GetProducts(0)
-	if err != nil {
-		log.Println(err)
-		c.String(http.StatusInternalServerError, "failed to fetch products")
-		return
-	}
-	if len(products) < 1 {
-		c.String(http.StatusBadRequest, "no products found")
-		return
-	}
-	err = templates.ProductsPage(products).Render(context.Background(), c.Writer)
-	if err != nil {
-		log.Println(err)
-		c.String(http.StatusInternalServerError, "unable to render template")
+	if page == 0 {
+		err = templates.ProductsPage(products).Render(context.Background(), c.Writer)
+		if err != nil {
+			log.Println(err)
+			c.String(http.StatusInternalServerError, "unable to render template")
+		}
+	} else {
+		err = templates.Products(products, page+1).Render(context.Background(), c.Writer)
+		if err != nil {
+			log.Println(err)
+			c.String(http.StatusInternalServerError, "failed to load products")
+			return
+		}
 	}
 }
 
