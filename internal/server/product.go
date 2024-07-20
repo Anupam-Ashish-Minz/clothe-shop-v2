@@ -23,8 +23,7 @@ func (s *Server) ProductsPage(c *gin.Context) {
 		return
 	}
 	if len(products) < 1 {
-		c.String(http.StatusBadRequest, "there are no products in this page")
-		return
+		log.Println("there are no products in this page")
 	}
 	if page == 0 {
 		err = templates.ProductsPage(products).Render(context.Background(), c.Writer)
@@ -33,6 +32,10 @@ func (s *Server) ProductsPage(c *gin.Context) {
 			c.String(http.StatusInternalServerError, "unable to render template")
 		}
 	} else {
+		if len(products) == 0 {
+			c.String(http.StatusNotFound, "no products found in page %d", page)
+			return
+		}
 		err = templates.Products(products, page+1).Render(context.Background(), c.Writer)
 		if err != nil {
 			log.Println(err)
