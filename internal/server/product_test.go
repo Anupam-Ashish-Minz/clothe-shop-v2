@@ -11,7 +11,7 @@ import (
 func TestProduct(t *testing.T) {
 	s, err := setupTesting()
 	if err != nil {
-		log.Println(err)
+		t.Fatal(err)
 	}
 	router := s.RegisterRoutes()
 	r := httptest.NewRequest("GET", "http://127.0.0.1:4000/products", nil)
