@@ -60,10 +60,9 @@ func New() Service {
 }
 
 func NewFrom(dburl string) Service {
+	log.Println(dburl)
 	db, err := sqlx.Connect("postgres", dburl)
 	if err != nil {
-		// This will not be a connection error, but a DSN parse error or
-		// another initialization error.
 		log.Fatal(err)
 	}
 	s := &service{db: db}

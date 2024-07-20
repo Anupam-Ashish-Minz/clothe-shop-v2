@@ -1,12 +1,13 @@
 package server
 
 import (
-	"encoding/csv"
 	"fmt"
+	"log"
 	"os"
-	"strconv"
 
 	"clothe-shop-v2/internal/database"
+
+	"github.com/joho/godotenv"
 )
 
 type Product struct {
@@ -16,40 +17,19 @@ type Product struct {
 	Gender      string
 }
 
-func setupTesting() (Server, error) {
+func setupTesting() (*Server, error) {
+	godotenv.Load("../../.env")
 	fmt.Println("starting setup.........")
-	file, err := os.Open("../../data/csv/products.csv")
-	if err != nil {
-		return Server{}, err
+	dburl := os.Getenv("DB_URL_MOCK")
+	port := 4000 // any port number will work
+	secret := []byte(os.Getenv("SECRET"))
+	log.Println(dburl)
+	server := &Server{
+		port:   port,
+		db:     database.NewFrom(dburl),
+		secret: secret,
 	}
-	r := csv.NewReader(file)
-	products := make([]Product, 0)
-
-	for {
-		record, err := r.Read()
-		if err != nil {
-			break
-		}
-		var product Product
-		product.Name = record[0]
-		product.Description = record[1]
-		product.Price, err = strconv.Atoi(record[2])
-		if err != nil {
-			return Server{}, err
-		}
-		product.Gender = record[3]
-		products = append(products, product)
-	}
-
-	dburl := os.Getenv("DB_URL_TEST")
-	db := database.NewFrom(dburl)
-	server := Server{
-		port:   4001,
-		db:     db,
-		secret: []byte(os.Getenv("SECRET")),
-	}
-
-	return server, err
+	return server, nil
 }
 
 func clearupTesting() {
