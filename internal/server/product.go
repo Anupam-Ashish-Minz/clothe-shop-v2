@@ -57,9 +57,6 @@ func (s *Server) ProductPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products")
 		return
 	}
-	log.Println(product)
-	// err = templates.Product(product).Render(context.Background(), c.Writer)
-	// if err != nil {
-	// 	log.Println(err)
-	// }
+	// TODO: build a page dedicated to the product
+	c.String(http.StatusOK, product.Name)
 }
