@@ -44,8 +44,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/admin", s.AdminPage)
 
-	r.POST("/admin/product/add", s.AddNewProduct)
-	r.POST("/admin/product/update", s.UpdateProduct)
+	r.POST("/admin/product", s.AddNewProduct)
+	r.PUT("/admin/product", s.UpdateProduct)
 
 	r.POST("/admin/api/order-count-graph/update", s.ChangeOrderCountGraph)
 

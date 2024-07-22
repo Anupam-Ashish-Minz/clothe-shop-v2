@@ -41,7 +41,7 @@ templ AdminProductPage(products []database.Product) {
 
 templ AdminAddProductPage() {
 	@AdminBase() {
-		<form action="/admin/product/add" class="flex flex-col gap-2 m-4 p-4 rounded">
+		<form action="/admin/product" class="flex flex-col gap-2 m-4 p-4 rounded" method="POST">
 			<input
 				type="text"
 				name="name"
