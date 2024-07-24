@@ -73,7 +73,7 @@ func setupTesting() (*Server, error) {
 	db := database.NewFrom(dburl)
 
 	port := 4000 // any port will work
-	secret := []byte(os.Getenv("SECRET"))
+	secret := []byte("mysecret")
 	log.Println(dburl)
 	server := &Server{
 		port:   port,
@@ -84,4 +84,14 @@ func setupTesting() (*Server, error) {
 }
 
 func clearupTesting() {
+}
+
+func connectTestingDatabase() *sqlx.DB {
+	godotenv.Load("../../.env")
+	dburl := os.Getenv("DB_URL_MOCK")
+	db, err := sqlx.Connect("postgres", dburl)
+	if err != nil {
+		panic(err)
+	}
+	return db
 }
