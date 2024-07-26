@@ -1,6 +1,8 @@
 package main
 
 /*
+#cgo CFLAGS: -I/usr/include/ImageMagick-7 -fopenmp -DMAGICKCORE_HDRI_ENABLE=1 -DMAGICKCORE_QUANTUM_DEPTH=16 -DMAGICKCORE_CHANNEL_MASK_DEPTH=32
+#cgo LDFLAGS: -lMagickWand-7.Q16HDRI -lMagickCore-7.Q16HDRI -lMagickWand-7.Q16HDRI -lMagickCore-7.Q16HDRI
 #include <stdio.h>
 #include <stdlib.h>
 
