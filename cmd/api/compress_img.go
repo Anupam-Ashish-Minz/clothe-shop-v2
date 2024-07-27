@@ -18,7 +18,7 @@ func changeExtension(inputName string) string {
 
 func compressImgCli(srcImg string) error {
 	outImg := changeExtension(srcImg)
-	cmd := exec.Command("magick", srcImg, outImg)
+	cmd := exec.Command("magick", "-quality", "90", srcImg, outImg)
 	err := cmd.Run()
 	if err != nil {
 		return err
