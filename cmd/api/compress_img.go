@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os/exec"
 	"strings"
 )
@@ -22,7 +21,6 @@ func compressImgCli(srcImg string) error {
 	cmd := exec.Command("magick", srcImg, outImg)
 	err := cmd.Run()
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	return nil
