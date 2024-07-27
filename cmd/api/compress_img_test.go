@@ -17,7 +17,7 @@ func TestChangeExtension(t *testing.T) {
 		"/home/anupam/work/playground/web/htmx/clothe-shop-v2/tmp/data/output.jpg")
 }
 
-func TestConvertImg(t *testing.T) {
+func TestCompressionImgCli(t *testing.T) {
 	err := compressImgCli("/home/anupam/work/playground/web/htmx/clothe-shop-v2/tmp/data/output.png")
 	if err != nil {
 		t.Fatal(err)
