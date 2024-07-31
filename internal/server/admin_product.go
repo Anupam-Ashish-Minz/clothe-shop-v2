@@ -23,7 +23,11 @@ func CheckProduct(name, gender, description, price string) (database.Product, er
 	}
 	intPrice, err := strconv.Atoi(price)
 	if err != nil {
-		return database.Product{}, err
+		fprice, err := strconv.ParseFloat(price, 64)
+		if err != nil {
+			return database.Product{}, err
+		}
+		intPrice = int(fprice)
 	}
 	return database.Product{
 		Name:        name,
