@@ -17,18 +17,29 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Server) AddNewProduct(c *gin.Context) {
-	var product database.Product
-	var err error
-	product.Name = c.PostForm("name")
-	product.Gender = c.PostForm("gender")
-	if product.Name == "" || product.Gender == "" {
-		log.Println("missing fields in product", product)
-		c.String(http.StatusBadRequest, "missing fields in product")
-		return
+func CheckProduct(name, gender, description, price string) (database.Product, error) {
+	if name == "" || gender == "" {
+		return database.Product{}, fmt.Errorf("name or gender missing from product")
 	}
-	product.Description = c.PostForm("description")
-	product.Price, err = strconv.Atoi(c.PostForm("price"))
+	intPrice, err := strconv.Atoi(price)
+	if err != nil {
+		return database.Product{}, err
+	}
+	return database.Product{
+		Name:        name,
+		Gender:      gender,
+		Description: description,
+		Price:       intPrice,
+	}, nil
+}
+
+func (s *Server) AddNewProduct(c *gin.Context) {
+	name := c.PostForm("name")
+	gender := c.PostForm("gender")
+	description := c.PostForm("description")
+	price := c.PostForm("price")
+
+	product, err := CheckProduct(name, gender, description, price)
 	if err != nil {
 		log.Println(err)
 		c.String(http.StatusBadRequest, "invalid values of price")
