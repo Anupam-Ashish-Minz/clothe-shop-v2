@@ -32,6 +32,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/products", s.ProductsPage)
 	r.GET("/product/:id", s.ProductPage)
+	r.POST("/product", s.AddNewProduct)
+	r.PUT("/product", s.UpdateProduct)
 
 	r.GET("/cart", s.CartPage)
 	r.POST("/cart", s.AddToCart)
@@ -43,9 +45,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/order", s.PlaceOrder)
 
 	r.GET("/admin", s.AdminPage)
-
-	r.POST("/admin/product", s.AddNewProduct)
-	r.PUT("/admin/product", s.UpdateProduct)
 
 	r.POST("/admin/api/order-count-graph/update", s.ChangeOrderCountGraph)
 
