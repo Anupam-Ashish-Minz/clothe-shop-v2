@@ -3,6 +3,9 @@ package main
 import (
 	"os/exec"
 	"strings"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func changeExtension(inputName string) string {
@@ -24,4 +27,18 @@ func compressImgCli(srcImg string) error {
 		return err
 	}
 	return nil
+}
+
+func batchCompress(dburl string) error {
+	db, err := sqlx.Connect("postgres", dburl)
+	if err != nil {
+		return err
+	}
+	type Product struct {
+		id    int64
+		image string
+	}
+	products := make([]Product, 0)
+	err = db.Select(products, `SELECT id, image FROM "Product" WHERE image LIKE %.png`)
+	return err
 }
