@@ -64,9 +64,7 @@ templ Product(product database.Product, page int, last bool) {
 		/>
 		<div class="text-lg font-bold">{ product.Name }</div>
 		<div>{ product.Description }</div>
-		<div>$ { strconv.Itoa(product.Price) }</div>
-		<script>
-		</script>
+		<div>$ {printPrice(product.Price)}</div>
 		<form
 			hx-post="/cart"
 			class="flex flex-col gap-4"

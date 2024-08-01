@@ -3,14 +3,19 @@ package templates
 import (
 	"clothe-shop-v2/internal/database"
 	"strconv"
+	"fmt"
 )
 
-func totalPrice(products []database.OrderItem) string {
+func printPrice(price int) string {
+	return fmt.Sprintf("%d.%d", price/100, price%100)
+}
+
+func totalPrice(products []database.OrderItem) int {
 	total := 0
 	for _, product := range products {
 		total += product.Price * product.Quantity
 	}
-	return strconv.Itoa(total)
+	return total
 }
 
 func productCount(products []database.OrderItem) string {
@@ -52,7 +57,7 @@ templ CartContent(products []database.OrderItem) {
 		<div class="relative flex justify-center">
 			<div class="md:fixed flex flex-col p-4 pt-16 pb-16 gap-4 items-start">
 				<h1 class="font-extrabold text-xl">Subtotal ({ productCount(products) } products)</h1>
-				<div class="font-bold text-lg">$ { totalPrice(products) }</div>
+				<div class="font-bold text-lg">$ { printPrice(totalPrice(products)) }</div>
 				<form action="/order" method="POST">
 					<button class="bg-slate-900 rounded px-4">order now</button>
 				</form>
@@ -111,7 +116,7 @@ templ ProductDetails(product database.OrderItem) {
 				hx-swap="outerHTML"
 			>+</button>
 		</div>
-		<div>$ { strconv.Itoa(product.Price * product.Quantity) }</div>
+		<div>$ {printPrice(product.Price * product.Quantity)}</div>
 		<button
 			class="bg-red-500 text-white py-1 px-2 rounded"
 			hx-delete={ "/cart/" + strconv.Itoa(int(product.ID)) }
