@@ -95,16 +95,17 @@ func (s *Server) AddNewProduct(c *gin.Context) {
 }
 
 func (s *Server) UpdateProduct(c *gin.Context) {
-	var product database.Product
-	var err error
-	product.Name = c.PostForm("name")
-	product.Description = c.PostForm("description")
-	product.Price, err = strconv.Atoi(c.PostForm("price"))
+	// var product database.Product
+	// var err error
+	name := c.PostForm("name")
+	gender := c.PostForm("gender")
+	description := c.PostForm("description")
+	price := c.PostForm("price")
+	product, err := CheckProduct(name, gender, description, price)
 	if err != nil {
 		log.Println(err)
-		log.Println("invalid value of price setting default price to 0")
-		product.Price = 0
 	}
+
 	err = s.db.UpdateProduct(product)
 	if err != nil {
 		log.Println(err)
