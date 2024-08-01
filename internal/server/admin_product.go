@@ -27,7 +27,9 @@ func CheckProduct(name, gender, description, price string) (database.Product, er
 		if err != nil {
 			return database.Product{}, err
 		}
-		intPrice = int(fprice)
+		intPrice = int(fprice * 100)
+	} else {
+		intPrice *= 100
 	}
 	return database.Product{
 		Name:        name,

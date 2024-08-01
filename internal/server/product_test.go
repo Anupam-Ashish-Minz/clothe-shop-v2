@@ -41,7 +41,7 @@ func TestNullCheckProduct(t *testing.T) {
 	assert.Equal(p1.Name, "mock product #1")
 	assert.Equal(p1.Gender, "male")
 	assert.Equal(p1.Description, "this is a mock product")
-	assert.Equal(p1.Price, 5000)
+	assert.Equal(p1.Price, 500000)
 
 	p2, err := CheckProduct("", "", "", "")
 	assert.NotEqual(err, nil)
@@ -62,14 +62,14 @@ func TestNullCheckProduct(t *testing.T) {
 	assert.Equal(p4.Name, "mock product #1")
 	assert.Equal(p4.Gender, "male")
 	assert.Equal(p4.Description, "")
-	assert.Equal(p4.Price, 5000)
+	assert.Equal(p4.Price, 500000)
 
 	p5, err := CheckProduct("mock product #1", "male", "this is a mock product", "4999.99")
 	assert.Equal(err, nil)
 	assert.Equal(p5.Name, "mock product #1")
 	assert.Equal(p5.Gender, "male")
 	assert.Equal(p5.Description, "this is a mock product")
-	assert.Equal(p5.Price, 4999)
+	assert.Equal(p5.Price, 499999)
 
 	p6, err := CheckProduct("mock product #1", "male", "this is a mock product", "$5000")
 	assert.NotEqual(err, nil)
