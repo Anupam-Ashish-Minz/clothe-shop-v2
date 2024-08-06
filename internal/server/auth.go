@@ -37,12 +37,23 @@ func parseToken(tokenString string, SECRET []byte) (int64, error) {
 	return int64(userID), nil
 }
 
+func loginCredintialsValidityCheck(email, password string) error {
+	if email == "" {
+		return fmt.Errorf("email is empty")
+	}
+	if password == "" {
+		return fmt.Errorf("password is empty")
+	}
+	return nil
+}
+
 func (s *Server) UserLogin(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
-	if email == "" || password == "" {
-		c.String(http.StatusBadRequest, "missing fields")
-		return
+	err := loginCredintialsValidityCheck(email, password)
+	if err != nil {
+		log.Println(err)
+		c.String(http.StatusBadRequest, "email or password is missing")
 	}
 	user, err := s.db.GetUserByEmail(email)
 	if err != nil {
