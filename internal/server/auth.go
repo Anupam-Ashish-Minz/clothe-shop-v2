@@ -12,6 +12,12 @@ import (
 )
 
 func createToken(userID int64, SECRET []byte) (string, error) {
+	if userID < 1 {
+		return "", fmt.Errorf("invalid userID")
+	}
+	if SECRET == nil {
+		return "", fmt.Errorf("secret should not be null")
+	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"user_id": userID})
 	return token.SignedString(SECRET)
 }
