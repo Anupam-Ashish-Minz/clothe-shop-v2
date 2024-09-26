@@ -22,7 +22,7 @@ func (s *Server) OrderPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "order query falied")
 		return
 	}
-	if err := templates.OrderPage(orders, true).Render(context.Background(), c.Writer); err != nil {
+	if err := templates.OrderPage(orders).Render(context.Background(), c.Writer); err != nil {
 		log.Println(err)
 		c.String(http.StatusInternalServerError, "failed to render template")
 		return
