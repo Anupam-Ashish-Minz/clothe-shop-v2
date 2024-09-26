@@ -26,7 +26,7 @@ func (s *Server) ProductsPage(c *gin.Context) {
 		log.Println("there are no products in this page")
 	}
 	if page == 0 {
-		err = templates.ProductsPage(products).Render(context.Background(), c.Writer)
+		err = templates.ProductsPage(products, true).Render(context.Background(), c.Writer)
 		if err != nil {
 			log.Println(err)
 			c.String(http.StatusInternalServerError, "unable to render template")

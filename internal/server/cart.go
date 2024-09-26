@@ -23,7 +23,7 @@ func (s *Server) CartPage(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "failed to fetch products from cart")
 		return
 	}
-	err = templates.Cart(products).Render(context.Background(), c.Writer)
+	err = templates.Cart(products, true).Render(context.Background(), c.Writer)
 	if err != nil {
 		log.Println(err)
 	}

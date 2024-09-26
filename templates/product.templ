@@ -12,8 +12,8 @@ func pngToJpeg(filename string) string {
 	return imagename + ".jpg"
 }
 
-templ ProductsPage(products []database.Product) {
-	@Base() {
+templ ProductsPage(products []database.Product, signedin bool) {
+	@Base(signedin) {
 		<script defer src="/static/alpine.min.js"></script>
 		<script>
 			function decrement(x) {

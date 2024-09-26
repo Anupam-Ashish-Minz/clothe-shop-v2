@@ -2,7 +2,7 @@ package templates
 
 import ()
 
-templ Base() {
+templ Base(signedin bool) {
 	<!DOCTYPE html>
 	<html lang="en" class="dark:bg-slate-800 dark:text-white dark">
 		<head>
@@ -74,15 +74,19 @@ templ Base() {
 		<body>
 			<div class="relative" style="height: 3rem; margin-bottom: 5rem;">
 				<nav
-					class="flex gap-2 p-2 py-4 fixed bg-slate-800 w-full
+					class="flex gap-2 p-2 py-4 fixed bg-slate-900 w-full
 					border-b"
 				>
-					<a class="underline" href="/">home</a>
-					<a class="underline" href="/products">products</a>
-					<a class="underline" href="/login">login</a>
-					<a class="underline" href="/signup">signup</a>
-					<a class="underline" href="/cart">cart</a>
-					<a class="underline" href="/orders">orders</a>
+					<a class="uppercase hover:underline" href="/">home</a>
+					<a class="uppercase hover:underline" href="/products">products</a>
+					if signedin {
+						<a class="uppercase hover:underline" href="/cart">cart</a>
+						<a class="uppercase hover:underline" href="/orders">orders</a>
+						<a class="uppercase hover:underline" href="/logout">logout</a>
+					} else {
+						<a class="uppercase hover:underline" href="/login">login</a>
+						<a class="uppercase hover:underline" href="/signup">signup</a>
+					}
 				</nav>
 			</div>
 			{ children... }
@@ -91,7 +95,7 @@ templ Base() {
 }
 
 templ Index() {
-	@Base() {
+	@Base(false) {
 		<h1 class="text-xl font-bold">Home Page</h1>
 		<a href="/products" class="underline">go to the products page</a>
 	}

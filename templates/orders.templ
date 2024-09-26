@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-templ OrderPage(orders []database.OrderWithProducts) {
-	@Base() {
+templ OrderPage(orders []database.OrderWithProducts, signedin bool) {
+	@Base(signedin) {
 		<h1 class="text-xl font-bold underline mb-8 ml-8">List of Previous orders</h1>
 		<div class="flex flex-col gap-4">
 			for _, order := range orders {

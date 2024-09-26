@@ -66,8 +66,8 @@ templ CartContent(products []database.OrderItem) {
 	</div>
 }
 
-templ Cart(products []database.OrderItem) {
-	@Base() {
+templ Cart(products []database.OrderItem, signedin bool) {
+	@Base(signedin) {
 		@CartContent(products)
 	}
 }
